@@ -1,5 +1,5 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
-// JavaScript File : bacteria.js
+// JavaScript File : species.js
 // Purpose : Define JSON Objects of bacteria species
 
 // Last Update : June 15th, 2024
