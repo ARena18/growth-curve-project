@@ -1,9 +1,10 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : June 16th, 2024
+// Last Update : June 17th, 2024
 
 /* Purpose : Define config JSON object,
              Define JSON Objects of bacteria species,
+             Define growth function for bacteria
 */
 
 /* Description of Configuration Object...
@@ -13,11 +14,19 @@
                temperatures of the environment the species grow in
    - initialNumCells: number (integer),
                       the initial number (before growth) of cells
+   - timeInterval: number (integer),
+                   time interval in minutes the growth of each species is
+                   calculated (for display on line graph)
+   - graphData: data on the number of each species' (listed in speciesList)
+                cells at each calculated time interval
+                (lower index, earlier time --> higher index, later time)
 */
 var config = {
-    speciesList: ["eColi",],
+    speciesList: ["eColi", "mycobacteriumTuberculosis", "clostridiumTetanus", "listeriaMonocytogenes", "thermusAquaticus"],
     tempList: [30,],
     initialNumCells: 1,
+    timeInterval: (60),
+    graphData: [],
 }
 // additional key-value pairs can be added
 
@@ -99,4 +108,50 @@ const species = {
    - I suggest the current list of species being displayed for the simulation
      be a list of JSON objects with name, currTemp, divRate, ... which can be
      compared to these constant JSON objects
+*/
+
+var workingList = [];   // list with species name and related information
+for(let i = 0; i < config.speciesList.length; i++) {
+    workingList.push({
+        name: config.speciesList[i],
+        numCells: config.initialNumCells,
+    })
+}
+/* Additional Notes
+   - the objects pushed/appended onto workingList should also have a temp
+     key/value pair, but it is not implemented currently because it is unclear
+     which temperatures apply to which species when multiple temperatures are
+     provided by the user
+     => WILL SEND AN EMAIL SOON
+*/
+
+// Increments numCells for each object/species in workingList
+// Accesses global variables config and appropriate species JSON objects
+// Pre : n/a
+// Post : numCells of workingList are incremented as appropriate
+function growBacteria() {
+  let data = {}
+  for(let i = 0; i < config.speciesList.length; i++) {
+    let tempIndex = 0;   // index to choose temperature from tempList
+    let speciesKey = config.speciesList[i];   // name of species, used as key
+    let divTime = species[speciesKey].maxDivTime * (1 - (
+      species[speciesKey].divSlowRate * (
+        Math.abs(species[speciesKey].maxDivTemp - config.tempList[tempIndex])
+      )
+    ));
+    let d = config.timeInterval / divTime;   // number of doublings in time interval
+    let newNumCells = Math.floor(workingList[i].numCells * (2 **d));
+
+    workingList[i].numCells = newNumCells;
+    data[speciesKey] = newNumCells;
+  }
+
+  config.graphData.push(data);
+}
+/* Additional Notes
+   - data holds the number of cells at the current time interval,
+     these data objects are pushed (end of list) to config.graphData,
+     constructing a list which can be used to produce a line graph
+     !! Assumption: line graph is constructed with D3; another library may need
+                    a different variable/structure for the data !!
 */
