@@ -2,7 +2,7 @@
 // JavaScript File : species.js
 // Purpose : Define JSON Objects of bacteria species
 
-// Last Update : June 15th, 2024
+// Last Update : June 16th, 2024
 /* Description of Each Object...
    - maxTemp: number (integer),
               highest temperature in degrees Celsius in which bacteria grows
