@@ -1,9 +1,27 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Purpose : Define JSON Objects of bacteria species
-
 // Last Update : June 16th, 2024
-/* Description of Each Object...
+
+/* Purpose : Define config JSON object,
+             Define JSON Objects of bacteria species,
+*/
+
+/* Description of Configuration Object...
+   - speciesList: list of strings,
+                  name of species to be displayed
+   - tempList: list of numbers,
+               temperatures of the environment the species grow in
+   - initialNumCells: number (integer),
+                      the initial number (before growth) of cells
+*/
+var config = {
+    speciesList: ["eColi",],
+    tempList: [30,],
+    initialNumCells: 1,
+}
+// additional key-value pairs can be added
+
+/* Description of Each Species Object...
    - maxTemp: number (integer),
               highest temperature in degrees Celsius in which bacteria grows
    - minTemp: number (integer),
@@ -19,12 +37,51 @@
                   from maxDivTemp
    - environment: string,
                   the oxygen environment in which the species can grow...
-                    "oxygen" - can only grow in environments with oxygen
-                    "anaerobic" - can only grow in environments without oxygen
-                    "both" - can grow in environments with or without oxygen
+                    "o" - oxygen; can only grow in environments with oxygen
+                    "a" - anaerobic; can only grow in environments without oxygen
+                    "b" - both; can grow in environments with or without oxygen
 
 */
-
+const eColi = {
+    maxTemp: 55,
+    minTemp: 5,
+    maxDivTemp: 37,
+    maxDivTime: 20,
+    divSlowRate: 0.03,
+    environment: "o"
+}
+const mycobacteriumTuberculosis = {
+    maxTemp: 55,
+    minTemp: 4,
+    maxDivTemp: 37,
+    maxDivTime: 8,
+    divSlowRate: 0.03,
+    environment: "o"
+}
+const clostridiumTetanus = {
+    maxTemp: 55,
+    minTemp: 5,
+    maxDivTemp: 37,
+    maxDivTime: 60,
+    divSlowRate: 0.03,
+    environment: "a"
+}
+const listeriaMonocytogenes = {
+    maxTemp: 55,
+    minTemp: 0,
+    maxDivTemp: 4,
+    maxDivTime: 60,
+    divSlowRate: 0.03,
+    environment: "o"
+}
+const thermusAquaticus = {
+    maxTemp: 99,
+    minTemp: 5,
+    maxDivTemp: 72,
+    maxDivTime: 40,
+    divSlowRate: 0.03,
+    environment: "o"
+}
 /* Additional Notes for Team
    - divSlowRate is a percentage and a decimal; it is the rate in which
      division slows therefore the current division rate for a species would be
@@ -41,48 +98,3 @@
      be a list of JSON objects with name, currTemp, divRate, ... which can be
      compared to these constant JSON objects
 */
-
-const eColi = {
-    maxTemp: 55,
-    minTemp: 5,
-    maxDivTemp: 37,
-    maxDivTime: 20,
-    divSlowRate: 0.03,
-    environment: "o"
-}
-
-const mycobacteriumTuberculosis = {
-    maxTemp: 55,
-    minTemp: 4,
-    maxDivTemp: 37,
-    maxDivTime: 8,
-    divSlowRate: 0.03,
-    environment: "o"
-}
-
-const clostridiumTetanus = {
-    maxTemp: 55,
-    minTemp: 5,
-    maxDivTemp: 37,
-    maxDivTime: 60,
-    divSlowRate: 0.03,
-    environment: "a"
-}
-
-const listeriaMonocytogenes = {
-    maxTemp: 55,
-    minTemp: 0,
-    maxDivTemp: 4,
-    maxDivTime: 60,
-    divSlowRate: 0.03,
-    environment: "o"
-}
-
-const thermusAquaticus = {
-    maxTemp: 99,
-    minTemp: 5,
-    maxDivTemp: 72,
-    maxDivTime: 40,
-    divSlowRate: 0.03,
-    environment: "o"
-}
