@@ -24,7 +24,48 @@
                     "both" - can grow in environments with or without oxygen
 
 */
-
+const species = {
+  eColi: {
+    maxTemp: 55,
+    minTemp: 5,
+    maxDivTemp: 37,
+    maxDivTime: 20,
+    divSlowRate: 0.03,
+    environment: "o"
+  },
+  mycobacteriumTuberculosis: {
+    maxTemp: 55,
+    minTemp: 4,
+    maxDivTemp: 37,
+    maxDivTime: 8,
+    divSlowRate: 0.03,
+    environment: "o"
+  },
+  clostridiumTetanus: {
+    maxTemp: 55,
+    minTemp: 5,
+    maxDivTemp: 37,
+    maxDivTime: 60,
+    divSlowRate: 0.03,
+    environment: "a"
+  },
+  listeriaMonocytogenes: {
+    maxTemp: 55,
+    minTemp: 0,
+    maxDivTemp: 4,
+    maxDivTime: 60,
+    divSlowRate: 0.03,
+    environment: "o"
+  },
+  thermusAquaticus: {
+    maxTemp: 99,
+    minTemp: 5,
+    maxDivTemp: 72,
+    maxDivTime: 40,
+    divSlowRate: 0.03,
+    environment: "o"
+  }
+}
 /* Additional Notes for Team
    - divSlowRate is a percentage and a decimal; it is the rate in which
      division slows therefore the current division rate for a species would be
@@ -41,48 +82,3 @@
      be a list of JSON objects with name, currTemp, divRate, ... which can be
      compared to these constant JSON objects
 */
-
-const eColi = {
-    maxTemp: 55,
-    minTemp: 5,
-    maxDivTemp: 37,
-    maxDivTime: 20,
-    divSlowRate: 0.03,
-    environment: "o"
-}
-
-const mycobacteriumTuberculosis = {
-    maxTemp: 55,
-    minTemp: 4,
-    maxDivTemp: 37,
-    maxDivTime: 8,
-    divSlowRate: 0.03,
-    environment: "o"
-}
-
-const clostridiumTetanus = {
-    maxTemp: 55,
-    minTemp: 5,
-    maxDivTemp: 37,
-    maxDivTime: 60,
-    divSlowRate: 0.03,
-    environment: "a"
-}
-
-const listeriaMonocytogenes = {
-    maxTemp: 55,
-    minTemp: 0,
-    maxDivTemp: 4,
-    maxDivTime: 60,
-    divSlowRate: 0.03,
-    environment: "o"
-}
-
-const thermusAquaticus = {
-    maxTemp: 99,
-    minTemp: 5,
-    maxDivTemp: 72,
-    maxDivTime: 40,
-    divSlowRate: 0.03,
-    environment: "o"
-}
