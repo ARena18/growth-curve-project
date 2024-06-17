@@ -42,45 +42,47 @@ var config = {
                     "b" - both; can grow in environments with or without oxygen
 
 */
-const eColi = {
+const species = {
+  eColi: {
     maxTemp: 55,
     minTemp: 5,
     maxDivTemp: 37,
     maxDivTime: 20,
     divSlowRate: 0.03,
     environment: "o"
-}
-const mycobacteriumTuberculosis = {
+  },
+  mycobacteriumTuberculosis: {
     maxTemp: 55,
     minTemp: 4,
     maxDivTemp: 37,
     maxDivTime: 8,
     divSlowRate: 0.03,
     environment: "o"
-}
-const clostridiumTetanus = {
+  },
+  clostridiumTetanus: {
     maxTemp: 55,
     minTemp: 5,
     maxDivTemp: 37,
     maxDivTime: 60,
     divSlowRate: 0.03,
     environment: "a"
-}
-const listeriaMonocytogenes = {
+  },
+  listeriaMonocytogenes: {
     maxTemp: 55,
     minTemp: 0,
     maxDivTemp: 4,
     maxDivTime: 60,
     divSlowRate: 0.03,
     environment: "o"
-}
-const thermusAquaticus = {
+  },
+  thermusAquaticus: {
     maxTemp: 99,
     minTemp: 5,
     maxDivTemp: 72,
     maxDivTime: 40,
     divSlowRate: 0.03,
     environment: "o"
+  }
 }
 /* Additional Notes for Team
    - divSlowRate is a percentage and a decimal; it is the rate in which
