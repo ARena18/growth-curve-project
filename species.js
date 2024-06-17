@@ -1,9 +1,27 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Purpose : Define JSON Objects of bacteria species
-
 // Last Update : June 16th, 2024
-/* Description of Each Object...
+
+/* Purpose : Define config JSON object,
+             Define JSON Objects of bacteria species,
+*/
+
+/* Description of Configuration Object...
+   - speciesList: list of strings,
+                  name of species to be displayed
+   - tempList: list of numbers,
+               temperatures of the environment the species grow in
+   - initialNumCells: number (integer),
+                      the initial number (before growth) of cells
+*/
+var config = {
+    speciesList: ["eColi",],
+    tempList: [30,],
+    initialNumCells: 1,
+}
+// additional key-value pairs can be added
+
+/* Description of Each Species Object...
    - maxTemp: number (integer),
               highest temperature in degrees Celsius in which bacteria grows
    - minTemp: number (integer),
@@ -19,9 +37,9 @@
                   from maxDivTemp
    - environment: string,
                   the oxygen environment in which the species can grow...
-                    "oxygen" - can only grow in environments with oxygen
-                    "anaerobic" - can only grow in environments without oxygen
-                    "both" - can grow in environments with or without oxygen
+                    "o" - oxygen; can only grow in environments with oxygen
+                    "a" - anaerobic; can only grow in environments without oxygen
+                    "b" - both; can grow in environments with or without oxygen
 
 */
 const species = {
