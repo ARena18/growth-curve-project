@@ -30,9 +30,9 @@
      division slows therefore the current division rate for a species would be
      (1 - (divSlowRate * (Math.absolute(maxDivTemp - currTemp))))
      or something similar
-   - currently assuming species which can grow in both environments divide
-     according to maxDivTime regardless of an oxygen or no oxygen environment
-     !!Blocked!! Need response from biology team
+   - environment is a string, supporting the future possibility of species
+     being able to grow in both oxygen and low/no oxygen environments, but is
+     currently be implemented as strictly oxygen or anaerobic
    - The list of bacteria being used for the simulation is independent of the
      JSON objects written here; these objects are purely data that should be
      accessed and compared to the current simulation variables
