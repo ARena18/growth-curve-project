@@ -43,21 +43,46 @@
 */
 
 const eColi = {
-
+    maxTemp: 55,
+    minTemp: 5,
+    maxDivTemp: 37,
+    maxDivTime: 20,
+    divSlowRate: 0.03,
+    environment: "o"
 }
 
-const mTB = {
-
+const mycobacteriumTuberculosis = {
+    maxTemp: 55,
+    minTemp: 4,
+    maxDivTemp: 37,
+    maxDivTime: 8,
+    divSlowRate: 0.03,
+    environment: "o"
 }
 
-const cTetani = {
-
+const clostridiumTetanus = {
+    maxTemp: 55,
+    minTemp: 5,
+    maxDivTemp: 37,
+    maxDivTime: 60,
+    divSlowRate: 0.03,
+    environment: "a"
 }
 
-const lMonocytogenes = {
-
+const listeriaMonocytogenes = {
+    maxTemp: 55,
+    minTemp: 0,
+    maxDivTemp: 4,
+    maxDivTime: 60,
+    divSlowRate: 0.03,
+    environment: "o"
 }
 
-const taq = {
-    
+const thermusAquaticus = {
+    maxTemp: 99,
+    minTemp: 5,
+    maxDivTemp: 72,
+    maxDivTime: 40,
+    divSlowRate: 0.03,
+    environment: "o"
 }
