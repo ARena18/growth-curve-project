@@ -64,7 +64,7 @@ const species = {
     maxTemp: 55,
     minTemp: 4,
     maxDivTemp: 37,
-    maxDivTime: 8,
+    maxDivTime: (8 * 24 * 60),
     divSlowRate: 0.03,
     environment: "o"
   },
