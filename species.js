@@ -15,9 +15,11 @@
                       the initial number (before growth) of cells
 */
 var config = {
-    speciesList: ["eColi",],
+    speciesList: ["eColi", "mycobacteriumTuberculosis", "clostridiumTetanus", "listeriaMonocytogenes", "thermusAquaticus"],
     tempList: [30,],
     initialNumCells: 1,
+    timeInterval: (60),
+    graphData: [],
 }
 // additional key-value pairs can be added
 
