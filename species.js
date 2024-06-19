@@ -1,6 +1,6 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : June 16th, 2024
+// Last Update : June 18th, 2024
 
 /* Purpose : Define config JSON object,
              Define JSON Objects of bacteria species,
@@ -13,12 +13,18 @@
                temperatures of the environment the species grow in
    - initialNumCells: number (integer),
                       the initial number (before growth) of cells
+   - timeInterval: number (integer),
+                   time interval in minutes the growth of each species is
+                   calculated (for display on line graph)
+   - graphData: data on the number of each species' (listed in speciesList)
+                cells at each calculated time interval
+                (lower index, earlier time --> higher index, later time)
 */
 var config = {
     speciesList: ["eColi", "mycobacteriumTuberculosis", "clostridiumTetanus", "listeriaMonocytogenes", "thermusAquaticus"],
     tempList: [30,],
     initialNumCells: 1,
-    timeInterval: (60),
+    timeInterval: (60 * 2),
     graphData: [],
 }
 // additional key-value pairs can be added
