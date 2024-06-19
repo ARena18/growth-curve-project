@@ -208,7 +208,7 @@ function resetSimulation() {
 
 // Run the simulation, taking in user input and preparing data for output
 // Utilizes the function(s)... prepareWorkingList, growBacteria
-// Pre : n/a
+// Pre : none
 // Post : config.graphData (the list of data used to plot the line graphs) is
 //        properly populated with data JSON objects
 function runSimulation() {
