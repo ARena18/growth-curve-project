@@ -222,6 +222,7 @@ function runSimulation() {
   // code which displays data
 }
 
+/*** Simulation Variables ***/
 var numIntervals = 0;
   // amount of time according to config.timeInterval that has passed
 var workingList = [];   // list with species name and related information
