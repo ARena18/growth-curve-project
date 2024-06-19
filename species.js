@@ -133,13 +133,13 @@ function prepareWorkingList() {
         name: config.speciesList[i],
         temp: config.tempList[i % config.tempList.length],
         viable: species[config.speciesList[i]].environment == config.environment,
+        numCells: config.initialNumCells,
     })
   }
 
   let data0 = {};   // data JSON object holding information before growth
   for(let i = 0; i < workingList.length; i++) {
-    data0[workingList[i].name] = config.initialNumCells;
-    console.log(data0);
+    data0[workingList[i].name] = workingList[i].numCells;
   }
   config.graphData.push(data0);
 }
@@ -173,7 +173,8 @@ function growBacteria() {
       let d = (config.timeInterval * numIntervals) / divTime;
         // number of doublings in time interval
       let newNumCells = Math.floor(config.initialNumCells * (2 ** d));
-      
+
+      workingList[i].numCells = newNumCells;
       data[speciesKey] = newNumCells;
     }
   }
