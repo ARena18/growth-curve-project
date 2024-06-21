@@ -132,8 +132,13 @@ function prepareWorkingList() {
     workingList.push({
         name: config.speciesList[i],
         temp: config.tempList[i % config.tempList.length],
-        viable: species[config.speciesList[i]].environment == config.environment,
+        viable: species[config.speciesList[i]].environment == "b" ||
+                config.environment == "n" ||
+                config.environment == species[config.speciesList[i]].environment,
+        timeOverflow: 0,
+        divCount: 0,
         numCells: config.initialNumCells,
+        testNutrient: 1.00,   // can be set to variable respective inside species
     })
   }
 
@@ -156,27 +161,57 @@ function prepareWorkingList() {
 //        a data JSON object is pushed/appended ot config.graphData
 function growBacteria() {
   let data = {};
-  numIntervals++;
 
   for(let i = 0; i < config.speciesList.length; i++) {
     let speciesKey = config.speciesList[i];   // name of species, used as key
+    let divTime = species[speciesKey].maxDivTime * (1 + (
+      species[speciesKey].divSlowRate * (
+        Math.abs(species[speciesKey].maxDivTemp - workingList[i].temp)
+      )
+    ));
+    let d = Math.floor(
+      (config.timeInterval + workingList[i].timeOverflow) / divTime
+    );   // number of doublings in time interval
+    let newNumCells = workingList[i].numCells;
+      // number of cells after growth (and/or death)
 
     if(workingList[i].temp > species[speciesKey].maxTemp ||
-       workingList[i].temp < species[speciesKey].minTemp) {
-      data[speciesKey] = workingList[i].numCells;
-    } else {
-      let divTime = species[speciesKey].maxDivTime * (1 + (
-        species[speciesKey].divSlowRate * (
-          Math.abs(species[speciesKey].maxDivTemp - workingList[i].temp)
-        )
-      ));
-      let d = (config.timeInterval * numIntervals) / divTime;
-        // number of doublings in time interval
-      let newNumCells = Math.floor(config.initialNumCells * (2 ** d));
+       workingList[i].temp < species[speciesKey].minTemp ||
+       !workingList[i].viable ||
+       workingList[i].testNutrient <= 0) {
+      
+      for(let j = 0; j < d; j++) {
+        workingList[i].divCount++;
 
-      workingList[i].numCells = newNumCells;
-      data[speciesKey] = newNumCells;
+        if(workingList[i].divCount % 7 == 0) {
+          workingList[i].divCount = 0;
+          newNumCells = Math.floor(newNumCells * (1 - 0.65));
+        }
+      }
+    } else { 
+        for(let j = 0; j < d; j++) {
+        workingList[i].testNutrient = workingList[i].testNutrient - 0.01;
+        if(workingList[i].testNutrient > 0) {
+          newNumCells = Math.floor(newNumCells * 2);
+
+          if(workingList[i].testNutrient <= 0.20) {
+            workingList[i].divCount++;
+
+            if(workingList[i].divCount % 7 == 0) {
+              workingList[i].divCount = 0;
+              newNumCells = Math.floor(newNumCells * (1 - 0.90));
+            }
+          }
+        }
+      }
+      
+      workingList[i].timeOverflow = Math.round(
+        (config.timeInterval + workingList[i].timeOverflow) % divTime
+      );
     }
+
+    workingList[i].numCells = newNumCells;
+    data[speciesKey] = newNumCells;
   }
 
   config.graphData.push(data);
