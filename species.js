@@ -1,6 +1,6 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : June 18th, 2024
+// Last Update : June 20th, 2024
 
 /* Purpose : Define config JSON object,
              Define JSON Objects of bacteria species,
@@ -259,6 +259,4 @@ function runSimulation() {
 }
 
 /*** Simulation Variables ***/
-var numIntervals = 0;
-  // amount of time according to config.timeInterval that has passed
 var workingList = [];   // list with species name and related information
