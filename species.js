@@ -1,6 +1,6 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : June 18th, 2024
+// Last Update : June 19th, 2024
 
 /* Purpose : Define config JSON object,
              Define JSON Objects of bacteria species,
@@ -103,18 +103,6 @@ const species = {
      JSON objects written here; these objects are purely data that should be
      accessed and compared to the current simulation variables;
      therefore the objects are constants
-*/
-
-// Reflect user input onto config JSON object
-// Pre : appropriate HTML elements are available
-//       i.e. species selects, range sliders,
-// Post : config.speciesList has the species to be displayed for the simulation;
-//        config.tempList has the temperatures to be applied in the simulation;
-//        environment reflects the chosen condition ("o"-oxygen, "a"-anaerobic)
-function reflectUI() {
-}
-/* Additional Notes
-   - This function combines the frontend and the backend
 */
 
 // Generate objects which represent the state of each species in the simulation
@@ -226,39 +214,3 @@ function growBacteria() {
      !! Assumption: line graph is constructed with D3; another library may need
                     a different variable/structure for the data !!
 */
-
-// Reset simulation variables to their initial state
-// Pre : none
-// Post : numIntervals is assigned '0';
-//        workingList is assigned an empty list;
-//        config.speciesList SHOULD BE assigned an empty list;
-//        config.tempList is assigned an empty list;
-//        config.graphData is assigned an empty list
-function resetSimulation() {
-  numIntervals = 0;
-  workingList = [];
-  config.speciesList = [];
-  config.tempList = [];
-  config.graphData = [];
-}
-
-// Run the simulation, taking in user input and preparing data for output
-// Utilizes the function(s)... prepareWorkingList, growBacteria
-// Pre : none
-// Post : config.graphData (the list of data used to plot the line graphs) is
-//        properly populated with data JSON objects
-function runSimulation() {
-  resetSimulation();
-
-  reflectUI();
-  prepareWorkingList();
-
-  // simulate and gather data <-- should be a function
-
-  // code which displays data
-}
-
-/*** Simulation Variables ***/
-var numIntervals = 0;
-  // amount of time according to config.timeInterval that has passed
-var workingList = [];   // list with species name and related information
