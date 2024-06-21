@@ -105,6 +105,15 @@ const species = {
      therefore the objects are constants
 */
 
+// Reflect user input onto config JSON object
+// Pre : appropriate HTML elements are available
+//       i.e. species selects, range sliders,
+// Post : config.speciesList has the species to be displayed for the simulation;
+//        config.tempList has the temperatures to be applied in the simulation;
+//        environment reflects the chosen condition ("o"-oxygen, "a"-anaerobic)
+function reflectUI() {
+}
+
 // Generate objects which represent the state of each species in the simulation
 // and push/append them to workingList, preparing workingList for use
 // Afterwards, the newly prepared workingList is used to define data0, a JSON
