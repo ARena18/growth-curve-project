@@ -214,3 +214,6 @@ function growBacteria() {
      !! Assumption: line graph is constructed with D3; another library may need
                     a different variable/structure for the data !!
 */
+
+/* Simulation Variables */
+var workingList = [];
