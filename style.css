@@ -1,25 +1,62 @@
-* {
+* { /* background */
     font-family: Calibri;
     background-color: rgb(132, 163, 255);
 }
-h1{
+.topbox{ /* title box */
+    display: flex;
+    background: rgb(59, 104, 255);
+    flex-direction: column;
+    margin-top: -8px;
+    margin-left: -8px;
+    margin-right: -8px;
+    margin-bottom: -8px;
+}
+h1{ /* title text */
     color: #ffffff;
+    display: flex;
     text-indent: 50px;
     font-size: 200%;
-  }
-.view .bacteria {
-    font-size: 150%;
-}
-.box{
-    height: 100px;
-    width: 2600px;
-    padding: 20px;
-    margin-left: -10px;
-    margin-top: -150px;
     background-color: rgb(59, 104, 255);
+    margin-top: 0px;
+    margin-bottom: 10px;
 }
 .view {
-    margin-top: 0px;
+    margin-top: -10px;
+}
+
+p {
+    margin-bottom: 0px;
+}
+
+/*color key*/
+.colorBox{
+    display: inline-flex;
+    background-color: rgb(223, 223, 223);
+    margin-left: 3px;
+    width: 300px;
+    height: 30px;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 15px;
+    text-indent: -30px;;
+    margin: 0px;    
+}
+.box1 {
+    display: flex;
+    background-color: rgb(255, 139, 139);
+    width: 30px;
+    height: 20px;
+    margin-left: -30px;
+    margin-right: 0px;
+
+}
+.box2 {
+    display: flex;
+    background-color: rgb(255, 69, 2);
+    width: 30px;
+    height: 20px;
+    margin-left: 0px;
+    margin-right: 0px;
 }
 
 button, select{
@@ -29,10 +66,51 @@ button, select{
 button:hover{
     opacity: .6;
 }
-.sliders{
-    width: 100%;
+
+/* slider*/
+input[type="range"]{
+    -webkit-appearance: none;
+    background-color: rgb(223, 223, 223);
+    width: 400px;
+    border-radius: 5px;
+    height: 12px;
 }
-.slider{
-    width: 100%;
-    height: 25px;
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 17px; 
+    height: 17px;
+    border-radius: 50%;
+    background: rgb(171, 171, 171);
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+    opacity: 0.8;
+}
+
+input[type="text"]{
+    background-color: white;
+    width: 30px;
+}
+.slider1 {
+    display: flex;
+}
+#menuContainer{
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+.sliders {
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 200px;
+}
+.row {
+    display: flex;
+    flex-direction: row;
+}
+#temperatures {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
