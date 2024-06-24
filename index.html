@@ -6,7 +6,7 @@
   HTML File : index.html
   Purpose : Define the main page of the Growth Curve Simulation
 
-  Last Update : June 20th, 2024
+  Last Update : June 24th, 2024
 -->
 
 <head>
@@ -24,7 +24,7 @@
   
     <!--Select View-->
     <h2>
-      
+      <form id="myForm">
       <div class="view">
         <label for="view"> Select View: </label>
         <select id="view">
@@ -42,9 +42,10 @@
         <label for="bacteria1"> Select Bacteria: </label>
         <br>
         <select id="bacteria1">
+          <option value="NULL"> </option>
           <option value="eColi">E. Coli</option>
           <option value="mycobacteriumTuberculosis">Mycobacterium Tuberculosis</option>
-          <option value="clostridiumTetanus">Clostridium Tetanuse</option>
+          <option value="clostridiumTetanus">Clostridium Tetanus</option>
           <option value="listeriaMonocytogenes">Listeria Monocytogenes</option>
           <option value="thermusAcquaticus">Thermus Acquaticus</option>
         </select>
@@ -101,7 +102,7 @@
       <!--Overall Submission Button-->
       <button id="submitButton"> Run Simulation</button>
 
-        <!--need to add submission------------------------------------>
+    </form>
     </h2>
     
     <!--JavaScript Files-->
