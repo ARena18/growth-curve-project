@@ -1,1 +1,84 @@
+<!DOCTYPE html>
+<html>
 
+<!-- 
+  Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+  HTML File : index.html
+  Purpose : Define the main page of the Growth Curve Simulation
+
+  Last Update : June 15th, 2024
+-->
+
+<head>
+  <title>Growth Curve Project</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <link href="style.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+  <h1>Growth Curve Project</h1>
+  <h1>Bacterial Growth and Temperature Simulation </h1>
+  <div class="box"></div>
+
+      <h2>
+        <div class="view">
+      <label for="view"> Select View: </label>
+      <select name="view" id="view">
+        <option value="linear">Linear</option>
+        <option value="log2">log_2</option>
+        <option value="log10">log_10</option>
+        <option value="cross-section">Cross-Section</option>
+      </select>
+      </div>
+
+      
+      <div class="bacteria">
+      <label for="bacteria"> Select Classification: </label>
+      <select name="bacteria" id="bacteria">
+        <option value="psychrophile">Psychrophile</option>
+        <option value="mesophile">Mesophile</option>
+        <option value="thermophile">Thermophile</option>
+        <option value="hyperthermophile">Hyperthermophile</option>
+      </select>
+    </div>
+    <form>
+      <p>Select a Temperature: <input type="temp"> </p>
+    </form>
+    <form>
+      <p>Select a Temperature: <input type="temp"> </p>
+    </form>
+    <form>
+      <p>Select a Temperature: <input type="temp"> </p>
+    </form>
+    <form>
+      <p>Select a Temperature: <input type="temp"> </p>
+    </form>
+    <form>
+      <p>Select a Temperature: <input type="temp"> </p>
+    </form>
+
+      <button> Add Bacteria </button>
+      <button> Add Temperature </button>
+      <button> Run Simulation</button>
+
+      <button> Add Bacteria </button>
+       <button> Add Temperature </button>
+       <button> Run Simulation</button>
+      <button> Add Bacteria </button>
+       <button> Add Temperature </button>
+       <button> Run Simulation</button>
+
+      <div class="sliders">
+          <input type="range" min="0" max="100" value="50" class="slider" id="range1">
+          <p> Value: <span id="sliderValue"></span></p>
+          <input type="range" min="0" max="100" value="50" class="slider" id="range2">
+          <input type="range" min="0" max="100" value="50" class="slider" id="range3">
+          <input type="range" min="0" max="100" value="50" class="slider" id="range4">
+          <input type="range" min="0" max="100" value="50" class="slider" id="range5">
+        </div>
+
+
+    </h2>
+</body>
+</html>
