@@ -6,7 +6,7 @@
   HTML File : index.html
   Purpose : Define the main page of the Growth Curve Simulation
 
-  Last Update : June 15th, 2024
+  Last Update : June 20th, 2024
 -->
 
 <head>
@@ -17,68 +17,95 @@
 </head>
 
 <body>
-  <h1>Growth Curve Project</h1>
+  <div class="topbox">
+  <h1>Growth Curve Project</h1> 
   <h1>Bacterial Growth and Temperature Simulation </h1>
-  <div class="box"></div>
+  </div>
+  
+    <!--Select View-->
+    <h2>
+      
+      <div class="view">
+        <label for="view"> Select View: </label>
+        <select id="view">
+          <option value="linear">Linear</option>
+          <option value="log2">log_2</option>
+          <option value="log10">log_10</option>
+          <option value="cross-section">Cross-Section</option>
+        </select>
+      </div>
+      <br>
 
-      <h2>
-        <div class="view">
-      <label for="view"> Select View: </label>
-      <select name="view" id="view">
-        <option value="linear">Linear</option>
-        <option value="log2">log_2</option>
-        <option value="log10">log_10</option>
-        <option value="cross-section">Cross-Section</option>
-      </select>
+      <!--Select Bacteria(First Menu)-->
+      <form id="myForm">
+      <div class="bacteria1">
+        <label for="bacteria1"> Select Bacteria: </label>
+        <br>
+        <select id="bacteria1">
+          <option value="eColi">E. Coli</option>
+          <option value="mycobacteriumTuberculosis">Mycobacterium Tuberculosis</option>
+          <option value="clostridiumTetanus">Clostridium Tetanuse</option>
+          <option value="listeriaMonocytogenes">Listeria Monocytogenes</option>
+          <option value="thermusAcquaticus">Thermus Acquaticus</option>
+        </select>
+      </div>
+    </form>
+      <!--Adding more menus-->
+      <div id="menuContainer"></div>
+
+      <!--Add/Remove Bacteria Buttons-->
+      <div id="buttonsContainer">
+        <button id="addBacteria"> Add Bacteria </button>
+        <button id="removeBacteria"> Remove Bacteria</button>
       </div>
 
+      <!--Select Temperature(First Slider and Input Box)-->
+      <p>Select Temperature (Celsius):</p>
+      <div class="range1"> 
+        <input type="range" value="50" min="0" max="100" id="slider1">
+        <input type="text" id="forSlider" value="50"> 
+      </div>
+
+      <!--Adding more sliders/input boxes-->
+      <div id="temperatures"></div>
+
+      <!--Slider Color Key-->
+      <div class="colorBox">
+        <div class="box1"></div>
+        Human Body
+        <div class="box2"></div>
+        Fever
+      </div>
+
+      <!--Add/Remove Temperature Buttons-->
+      <div id="tempContainer">
+        <button id="temperature1"> Add Temperature </button>
+        <button id="temperature2"> Remove Temperature</button>
+      </div>
+      <br>
       
-      <div class="bacteria">
-      <label for="bacteria"> Select Classification: </label>
-      <select name="bacteria" id="bacteria">
-        <option value="psychrophile">Psychrophile</option>
-        <option value="mesophile">Mesophile</option>
-        <option value="thermophile">Thermophile</option>
-        <option value="hyperthermophile">Hyperthermophile</option>
-      </select>
-    </div>
-    <form>
-      <p>Select a Temperature: <input type="temp"> </p>
-    </form>
-    <form>
-      <p>Select a Temperature: <input type="temp"> </p>
-    </form>
-    <form>
-      <p>Select a Temperature: <input type="temp"> </p>
-    </form>
-    <form>
-      <p>Select a Temperature: <input type="temp"> </p>
-    </form>
-    <form>
-      <p>Select a Temperature: <input type="temp"> </p>
-    </form>
+      <!--Radio Bubbles-->
+      <div class="radioContainer">
+        <label for="bubble1">
+          <input type="radio" id="bubble1" value="oxygen" name="oxy">
+          Aerobic
+        </label>
+        <br>
+        <label for="bubble2">
+          <input type="radio" id="bubble2" value="nooxygen" name="oxy">
+          Anaerobic
+        </label>
+      </div>
+      <br>
 
-      <button> Add Bacteria </button>
-      <button> Add Temperature </button>
-      <button> Run Simulation</button>
+      <!--Overall Submission Button-->
+      <button id="submitButton"> Run Simulation</button>
 
-      <button> Add Bacteria </button>
-       <button> Add Temperature </button>
-       <button> Run Simulation</button>
-      <button> Add Bacteria </button>
-       <button> Add Temperature </button>
-       <button> Run Simulation</button>
-
-      <div class="sliders">
-          <input type="range" min="0" max="100" value="50" class="slider" id="range1">
-          <p> Value: <span id="sliderValue"></span></p>
-          <input type="range" min="0" max="100" value="50" class="slider" id="range2">
-          <input type="range" min="0" max="100" value="50" class="slider" id="range3">
-          <input type="range" min="0" max="100" value="50" class="slider" id="range4">
-          <input type="range" min="0" max="100" value="50" class="slider" id="range5">
-        </div>
-
-
+        <!--need to add submission------------------------------------>
     </h2>
+    
+    <!--JavaScript Files-->
+    <script src="script.js"></script>
+    <script src="species.js"></script>
 </body>
 </html>
