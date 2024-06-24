@@ -114,6 +114,6 @@ input[type="text"]{
     flex-direction: column;
     align-items: flex-start;
 }
-#forSlider {
+#sliderInputBox1 {
     margin-left: -6px;
 }
