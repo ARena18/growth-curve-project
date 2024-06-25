@@ -1,3 +1,10 @@
+/*
+  Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+  CSS File : style.css
+  Purpose : Define the main page of the Growth Curve Simulation
+  Last Update : June 25th, 2024
+*/
+
 * { /* background */
     font-family: Calibri;
     background-color: rgb(132, 163, 255);
