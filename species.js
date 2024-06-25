@@ -118,17 +118,17 @@ function reflectUI() {
 // and push/append them to workingList, preparing workingList for use
 // Afterwards, the newly prepared workingList is used to define data0, a JSON
 // object/variable which represents the data of each species before growth
-// Pre : workingList is declared a global variable and is initialized as an
-//       empty list
+// Pre : workingList is declared a global variable;
+//       temp is a number (integer) variable representing the current temperature
 // Post : the length of workingList is equal to the length of config.speciesList
 //        (the list of species chosen by the user), its content are JSON objects
 //        representing information and the state of the chosen species;
 //        data0 is added to config.graphData
-function prepareWorkingList() {
+function prepareWorkingList(temp) {
+  workingList = [];   // reset workingList
   for(let i = 0; i < config.speciesList.length; i++) {   // prepare workingList
     workingList.push({
         name: config.speciesList[i],
-        temp: config.tempList[i % config.tempList.length],
         viable: species[config.speciesList[i]].environment == "b" ||
                 config.environment == "n" ||
                 config.environment == species[config.speciesList[i]].environment,
@@ -143,27 +143,30 @@ function prepareWorkingList() {
   for(let i = 0; i < workingList.length; i++) {
     data0[workingList[i].name] = workingList[i].numCells;
   }
-  config.graphData.push(data0);
+  config.graphData[`@${temp}`].push(data0);
 }
 /* Additional Notes
    - Any other initial setup necessary to implement the addition of the JSON
      objects (which are the content of workingList) can be placed inside the
      function
+   - data0 is constructed and added to config.graphData inside
+     prepareWorkingList to ensure it is constructed when workinList is newly
+     initialized
 */
 
 // Grows bacteria and stores relevant data as a JSON object in config.graphData
 // Accesses global variables config and species JSON object
-// Pre : none
+// Pre : temp is a number (integer) variable representing the current temperature
 // Post : numIntervals is incremented by '1';
 //        a data JSON object is pushed/appended ot config.graphData
-function growBacteria() {
+function growBacteria(temp) {
   let data = {};
 
   for(let i = 0; i < config.speciesList.length; i++) {
     let speciesKey = config.speciesList[i];   // name of species, used as key
     let divTime = species[speciesKey].maxDivTime * (1 + (
       species[speciesKey].divSlowRate * (
-        Math.abs(species[speciesKey].maxDivTemp - workingList[i].temp)
+        Math.abs(species[speciesKey].maxDivTemp - temp)
       )
     ));
     let d = Math.floor(
@@ -172,8 +175,8 @@ function growBacteria() {
     let newNumCells = workingList[i].numCells;
       // number of cells after growth (and/or death)
 
-    if(workingList[i].temp > species[speciesKey].maxTemp ||
-       workingList[i].temp < species[speciesKey].minTemp ||
+    if(temp > species[speciesKey].maxTemp ||
+       temp < species[speciesKey].minTemp ||
        !workingList[i].viable ||
        workingList[i].testNutrient <= 0) {
       
@@ -199,9 +202,13 @@ function growBacteria() {
               newNumCells = Math.floor(newNumCells * (1 - 0.90));
             }
           }
+
+          if(workingList[i].testNutrient <= 0.60) {
+            newNumCells = Math.floor(newNumCells * (1 - 0.10));
+          }
         }
       }
-      
+
       workingList[i].timeOverflow = Math.round(
         (config.timeInterval + workingList[i].timeOverflow) % divTime
       );
@@ -211,7 +218,7 @@ function growBacteria() {
     data[speciesKey] = newNumCells;
   }
 
-  config.graphData.push(data);
+  config.graphData[`@${temp}`].push(data);
 }
 /* Additional Notes
    - there are no necessary pre-conditions, but it is preferred config and
@@ -220,20 +227,51 @@ function growBacteria() {
    - data holds the number of cells at the current time interval,
      these data objects are pushed (end of list) to config.graphData,
      constructing a list which can be used to produce a line graph
-     !! Assumption: line graph is constructed with D3; another library may need
-                    a different variable/structure for the data !!
 */
+
+// Gathers data on the growth of select species at temp (parameter)
+// Utilizes the function(s)... growBacteria
+// Pre : temp is a number (integer) variable representing the current temperature
+// Post : data JSON objects are pushed/appended to config.graphData[`@${temp}`]
+function gatherData(temp) {
+  prepareWorkingList(temp);
+
+  let sum = 5;   // number of all bacteria cells
+
+  while(sum > 0) {
+    growBacteria(temp);
+
+    // recalculating sum
+    sum = 0;
+    workingList.forEach( (state) => {
+      sum += state.numCells;
+    })
+  }
+}
+
+// Determines method of display and calls the related function
+// Utilizes the function(s)... addTable, 
+// Pre : none
+// Post : HTML elements which display growth data are added
+function display() {
+  // empty display container
+  let container = document.getElementById("displayContainer");
+  while(container.hasChildNodes()) {
+    container.removeChild(container.firstChild);
+  }
+
+  config.tempList.forEach( (temp) => {
+    // display function
+    // should involve an if/else through view dropdown (id="view")
+  })
+}
 
 // Reset simulation variables to their initial state
 // Pre : none
-// Post : numIntervals is assigned '0';
-//        workingList is assigned an empty list;
-//        config.speciesList SHOULD BE assigned an empty list;
+// Post : config.speciesList SHOULD BE assigned an empty list;
 //        config.tempList is assigned an empty list;
 //        config.graphData is assigned an empty list
 function resetSimulation() {
-  numIntervals = 0;
-  workingList = [];
   config.speciesList = [];
   config.tempList = [];
   config.graphData = [];
@@ -246,13 +284,13 @@ function resetSimulation() {
 //        properly populated with data JSON objects
 function runSimulation() {
   resetSimulation();
-
   reflectUI();
-  prepareWorkingList();
+  
+  config.tempList.forEach( (temp) => {
+    gatherData(temp);
+  })
 
-  // simulate and gather data <-- should be a function
-
-  // code which displays data
+  display();
 }
 
 /*** Simulation Variables ***/
