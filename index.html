@@ -5,7 +5,6 @@
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   HTML File : index.html
   Purpose : Define the main page of the Growth Curve Simulation
-
   Last Update : June 25th, 2024
 -->
 
@@ -24,35 +23,37 @@
   
     <!--Select View-->
     <h2>
-      <form id="myForm">
-      <div class="view">
-        <label for="view"> Select View: </label>
-        <select id="view">
-          <option value="linear">Linear</option>
-          <option value="log2">log_2</option>
-          <option value="log10">log_10</option>
-          <option value="cross-section">Cross-Section</option>
-        </select>
-      </div>
+      <form id="form1">
+        <div class="view">
+          <label for="view"> Select View: </label>
+          <select id="view">
+            <option value="linear">Linear</option>
+            <option value="log2">log_2</option>
+            <option value="log10">log_10</option>
+            <option value="cross-section">Cross-Section</option>
+          </select>
+        </div>
+      </form>
       <br>
 
       <!--Select Bacteria(First Menu)-->
-      <form id="myForm">
-      <div class="bacteria1">
-        <label for="bacteria1"> Select Bacteria: </label>
-        <br>
-        <select id="bacteria1">
-          <option value="NULL"> </option>
-          <option value="eColi">E. Coli</option>
-          <option value="mycobacteriumTuberculosis">Mycobacterium Tuberculosis</option>
-          <option value="clostridiumTetanus">Clostridium Tetanus</option>
-          <option value="listeriaMonocytogenes">Listeria Monocytogenes</option>
-          <option value="thermusAcquaticus">Thermus Acquaticus</option>
-        </select>
-      </div>
-    </form>
-      <!--Adding more menus-->
-      <div id="menuContainer"></div>
+      <form id="form2">
+        <div class="bacteria1">
+          <label for="bacteria1"> Select Bacteria: </label>
+          <br>
+          <select id="bacteria1">
+            <option value="NULL"> </option>
+            <option value="eColi">E. Coli</option>
+            <option value="mycobacteriumTuberculosis">Mycobacterium Tuberculosis</option>
+            <option value="clostridiumTetanus">Clostridium Tetanus</option>
+            <option value="listeriaMonocytogenes">Listeria Monocytogenes</option>
+            <option value="thermusAcquaticus">Thermus Acquaticus</option>
+          </select>
+        </div>
+
+        <!--Adding more menus-->
+        <div id="menuContainer"></div>
+      </form>
 
       <!--Add/Remove Bacteria Buttons-->
       <div id="buttonsContainer">
@@ -61,14 +62,16 @@
       </div>
 
       <!--Select Temperature(First Slider and Input Box)-->
-      <p>Select Temperature (Celsius):</p>
-      <div class="range1"> 
-        <input type="range" value="50" min="0" max="100" id="slider1">
-        <input type="text" id="sliderInputBox1" value="50"> 
-      </div>
+      <form id="form3">
+        <p>Select Temperature (Celsius):</p>
+        <div class="range1"> 
+          <input type="range" value="50" min="0" max="100" id="slider1">
+          <input type="text" id="sliderInputBox1" value="50"> 
+        </div>
 
-      <!--Adding more sliders/input boxes-->
-      <div id="temperatures"></div>
+        <!--Adding more sliders/input boxes-->
+        <div id="temperatures"></div>
+      </form>
 
       <!--Slider Color Key-->
       <div class="colorBox">
@@ -86,23 +89,23 @@
       <br>
       
       <!--Radio Bubbles-->
-      <div class="radioContainer">
-        <label for="bubble1">
-          <input type="radio" id="bubble1" value="oxygen" name="oxy">
-          Aerobic
-        </label>
+      <form id="form4">
+        <div class="radioContainer">
+          <label for="bubble1">
+            <input type="radio" id="bubble1" value="oxygen" name="oxy">
+            Aerobic
+          </label>
+          <br>
+          <label for="bubble2">
+            <input type="radio" id="bubble2" value="nooxygen" name="oxy">
+            Anaerobic
+          </label>
+        </div>
         <br>
-        <label for="bubble2">
-          <input type="radio" id="bubble2" value="nooxygen" name="oxy">
-          Anaerobic
-        </label>
-      </div>
-      <br>
+      </form>
 
       <!--Overall Submission Button-->
       <button id="submitButton"> Run Simulation</button>
-
-    </form>
     </h2>
     
     <!--JavaScript Files-->
