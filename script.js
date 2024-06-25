@@ -1,3 +1,10 @@
+/*
+  Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+  JavaScript File : script.js
+  Purpose : Define the main page of the Growth Curve Simulation
+  Last Update : June 25th, 2024
+*/
+
 const viewMenu = document.getElementById("view"); // view select menu
 const container = document.getElementById("menuContainer"); // bacteria menus get added here
 const bacteria = document.getElementById("addBacteria"); // add bacteria button
