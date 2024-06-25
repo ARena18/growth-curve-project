@@ -6,9 +6,14 @@ const container2 = document.getElementById("temperatures"); // temperature slide
 const addTemp = document.getElementById("addTemp"); // add temperature button
 const removeTemp = document.getElementById("removeTemp"); // remove temperature button
 const submitButton = document.getElementById("submitButton"); // run simulation button
-const turnIn = document.getElementById("myForm"); // html form
 const bubble1 = document.getElementById("bubble1"); // radio bubble: Aerobic
 const bubble2 = document.getElementById("bubble2"); // radio bubble: Anaerobic
+
+// html forms
+const form1 = document.getElementById("form1"); // html form
+const form2 = document.getElementById("form2"); // html form
+const form3 = document.getElementById("form3"); // html form
+const form4 = document.getElementById("form4"); // html form
 
 // Nondynamic: temperature slider/inputbox and bacteria menu
 const slider1 = document.getElementById("slider1"); // initial slider
@@ -48,7 +53,10 @@ function reloadData(){
 
 // submit
 submitButton.addEventListener("click", function(){
-    turnIn.requestSubmit();
+    form1.requestSubmit();
+    form2.requestSubmit();
+    form3.requestSubmit();
+    form4.requestSubmit();
 });
 
 // slider colors
