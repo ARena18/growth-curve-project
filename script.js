@@ -1,298 +1,247 @@
+const viewMenu = document.getElementById("view"); // view select menu
+const container = document.getElementById("menuContainer"); // bacteria menus get added here
+const bacteria = document.getElementById("addBacteria"); // add bacteria button
+const removeBacteria = document.getElementById("removeBacteria"); // remove bacteria button
+const container2 = document.getElementById("temperatures"); // temperature sliders/input boxes get added here
+const addTemp = document.getElementById("addTemp"); // add temperature button
+const removeTemp = document.getElementById("removeTemp"); // remove temperature button
+const submitButton = document.getElementById("submitButton"); // run simulation button
+const turnIn = document.getElementById("myForm"); // html form
+const bubble1 = document.getElementById("bubble1"); // radio bubble: Aerobic
+const bubble2 = document.getElementById("bubble2"); // radio bubble: Anaerobic
 
-const container = document.getElementById("menuContainer");
-const bacteria = document.getElementById("addBacteria");
+// Nondynamic: temperature slider/inputbox and bacteria menu
+const slider1 = document.getElementById("slider1"); // initial slider
+const inputBox1 = document.getElementById("sliderInputBox1"); // initial slider input box
+const menu1 = document.getElementById("bacteria1"); // initial bacteria menu
+
 // counters
-let count1 = 1;
-let count2=1;
-let count3=2; // reflects the two options that will stay on the screen
-const container2 = document.getElementById("temperatures");
-const temp = document.getElementById("temperature1");
-const slider = document.getElementById("slider1");
-const theInput = document.getElementById("forSlider");
-const removeB = document.getElementById("removeBacteria");
-const removeT = document.getElementById("temperature2");
+let count1 = 1; // bacteria menu counter
+let count2 = 1; // temperature slider/input box counter
+let count3 = 2; // ensures that there can only be up to 6 elements of either bacteria menus or temperature sliders/inputboxes
 
-const turnIn = document.getElementById("myForm");
-const submitButton = document.getElementById("submitButton");
+// load past user input after running the simulation
+window.addEventListener("load", reloadData);
+function reloadData(){
+    menu1.value = localStorage.getItem("menu" + 1);
+    slider1.value = localStorage.getItem("slider" + 1);
+    inputBox1.value = localStorage.getItem("slider" + 1);
+    viewMenu.value = localStorage.getItem("view");
+    sliderColor(slider1, slider1);
 
+    if(localStorage.getItem("bubble")==1){
+        bubble1.checked=true;
+    } else if(localStorage.getItem("bubble")==2){
+        bubble2.checked=true;
+    }
+    for (let i=2; i<6; i++) {
+        if(localStorage.getItem("menu"+ i)){
+            bacteria.click();
+        }
+    }
+    for (let i=2; i<6; i++) {
+        if(localStorage.getItem("slider"+ i)){
+            addTemp.click();
+        }
+    }
+}
 
-removeB.addEventListener("click", function() {
+// submit
+submitButton.addEventListener("click", function(){
+    turnIn.requestSubmit();
+});
+
+// slider colors
+function sliderColor(inputBox, sliderBar) {
+    if(inputBox.value== 37) {
+        sliderBar.style.backgroundColor = `rgb(255, 139, 139)`;
+    } else if(inputBox.value==38) {
+        sliderBar.style.backgroundColor = `rgb(255, 106, 75)`;
+    } else if(inputBox.value== 39) {
+        sliderBar.style.backgroundColor = `rgb(255, 69, 2)`;
+    } else if(inputBox.value<6) {
+        sliderBar.style.backgroundColor = `rgb(0, 0, 255)`;
+    } else if(inputBox.value<11) {
+        sliderBar.style.backgroundColor = `rgb(93, 0, 255)`;
+    } else if(inputBox.value<16) {
+        sliderBar.style.backgroundColor = `rgb(123, 0, 255)`;
+    } else if(inputBox.value<21) {
+        sliderBar.style.backgroundColor = `rgb(152, 0, 255)`;
+    } else if(inputBox.value<26) {
+        sliderBar.style.backgroundColor = `rgb(191, 0, 255)`;
+    } else if(inputBox.value<31) {
+        sliderBar.style.backgroundColor = `rgb(216, 0, 255)`;
+    } else if(inputBox.value<36) {
+        sliderBar.style.backgroundColor = `rgb(255, 0, 255)`;
+    } else if(inputBox.value<41) {
+        sliderBar.style.backgroundColor = `rgb(255, 0, 182)`;
+    } else if(inputBox.value<46) {
+        sliderBar.style.backgroundColor = `rgb(255, 0, 114)`;
+    } else if(inputBox.value<101) {
+        sliderBar.style.backgroundColor = `rgb(231, 38, 0)`;
+    } else{
+        sliderBar.style.backgroundColor = `rgb(223, 223, 223)`;
+    }
+}
+
+// saving user input
+// view menu
+viewMenu.addEventListener("change", function() {
+    localStorage.setItem("view", viewMenu.value);
+});
+// initial bacteria menu
+menu1.addEventListener("change", function(){
+    localStorage.setItem("menu" + 1, menu1.value);
+});
+// initial slider/input box
+slider1.addEventListener("input", function(){
+    localStorage.setItem("slider" + 1, slider1.value);
+});
+
+// removes bacteria menus + deletes saved input data
+removeBacteria.addEventListener("click", function() {
     var temp1 = document.getElementById("bacteria" + count1);
     if (container.contains(temp1)) {
         container.removeChild(container.lastElementChild);
+        localStorage.removeItem("menu" + count1);
         count1 = count1 - 1;
         count3 = count3 - 1;
     }
 });
 
-removeT.addEventListener("click", function() {
+// removes temperature sliders/input boxes + deletes saved input data
+removeTemp.addEventListener("click", function() {
     var temp2 = document.getElementById("sliderid");
     if (container2.contains(temp2)) {
         container2.removeChild(container2.lastElementChild);
+        localStorage.removeItem("slider" + count2);
         count2 = count2 - 1;
         count3 = count3 - 1;
     }
 });
 
+// changes corresponding input box to match slider + changes slider color
+slider1.addEventListener("input", function(){
+    inputBox1.value = slider1.value;
+    sliderColor(slider1, slider1);
+});
 
-slider.addEventListener("input", function(){
-    theInput.value = slider.value;
-
-    //add this next part inside the other functions
-    // to have the rest of the sliders do the same
-    if(slider.value== 37) {
-        slider.style.backgroundColor = `rgb(255, 139, 139)`;
-    }
-    else if(slider.value==38) {
-        slider.style.backgroundColor = `rgb(255, 106, 75)`;
-    }
-    else if(slider.value== 39) {
-        slider.style.backgroundColor = `rgb(255, 69, 2)`;
-    }
-    else if(slider.value<6) {
-        slider.style.backgroundColor = `rgb(0, 0, 255)`;
-    }
-    else if(slider.value<11) {
-        slider.style.backgroundColor = `rgb(93, 0, 255)`;
-    }
-    else if(slider.value<16) {
-        slider.style.backgroundColor = `rgb(123, 0, 255)`;
-    }
-    else if(slider.value<21) {
-        slider.style.backgroundColor = `rgb(152, 0, 255)`;
-    }
-    else if(slider.value<26) {
-        slider.style.backgroundColor = `rgb(191, 0, 255)`;
-    }
-    else if(slider.value<31) {
-        slider.style.backgroundColor = `rgb(216, 0, 255)`;
-    }
-    else if(slider.value<36) {
-        slider.style.backgroundColor = `rgb(255, 0, 255)`;
-    }
-    else if(slider.value<41) {
-        slider.style.backgroundColor = `rgb(255, 0, 182)`;
-    }
-    else if(slider.value<46) {
-        slider.style.backgroundColor = `rgb(255, 0, 114)`;
-    }
-    else if(slider.value<101) {
-        slider.style.backgroundColor = `rgb(231, 38, 0)`;
-    }
-    else{
-        slider.style.backgroundColor = `rgb(223, 223, 223)`;
-    }
-})
-
-theInput.addEventListener("input", function(){
-    if(theInput.value < 101){
-        slider.value = theInput.value;
+// changes corresponding slider to match input box + changes slider color
+inputBox1.addEventListener("input", function(){
+    if(inputBox1.value < 101){
+        slider1.value = inputBox1.value;
     }  
-    if(theInput.value== 37) {
-        slider.style.backgroundColor = `rgb(255, 139, 139)`;
-    }
-    else if(theInput.value==38) {
-        slider.style.backgroundColor = `rgb(255, 106, 75)`;
-    }
-    else if(theInput.value== 39) {
-        slider.style.backgroundColor = `rgb(255, 69, 2)`;
-    }
-    else if(theInput.value<6) {
-        slider.style.backgroundColor = `rgb(0, 0, 255)`;
-    }
-    else if(theInput.value<11) {
-        slider.style.backgroundColor = `rgb(93, 0, 255)`;
-    }
-    else if(theInput.value<16) {
-        slider.style.backgroundColor = `rgb(123, 0, 255)`;
-    }
-    else if(theInput.value<21) {
-        slider.style.backgroundColor = `rgb(152, 0, 255)`;
-    }
-    else if(theInput.value<26) {
-        slider.style.backgroundColor = `rgb(191, 0, 255)`;
-    }
-    else if(theInput.value<31) {
-        slider.style.backgroundColor = `rgb(216, 0, 255)`;
-    }
-    else if(theInput.value<36) {
-        slider.style.backgroundColor = `rgb(255, 0, 255)`;
-    }
-    else if(theInput.value<41) {
-        slider.style.backgroundColor = `rgb(255, 0, 182)`;
-    }
-    else if(theInput.value<46) {
-        slider.style.backgroundColor = `rgb(255, 0, 114)`;
-    }
-    else if(theInput.value<101) {
-        slider.style.backgroundColor = `rgb(231, 38, 0)`;
-    }
-    else{
-        slider.style.backgroundColor = `rgb(223, 223, 223)`;
-    }
-})
+    sliderColor(inputBox1, slider1);
+});
 
-
+// adds a new bacteria menu + saves/loads past user input
 bacteria.addEventListener("click", function() {
     if (count1 < 5 && count3 < 6) {
         count1++;
         count3++;
+
         const newInput = document.createElement("select");
-        const option1 = document.createElement("option")
-        const option2 = document.createElement("option")
-        const option3 = document.createElement("option")
-        const option4 = document.createElement("option")
-        const option5 = document.createElement("option")
-        option1.textContent = "E. Coli";
-        option2.textContent = "Mycobacterium Tuberculosis";
-        option3.textContent = "Clostridium Tetanus";
-        option4.textContent = "Listeria Monocytogenes";
-        option5.textContent = "Thermus Acquaticus";
+        const option1 = document.createElement("option");
+        const option2 = document.createElement("option");
+        const option3 = document.createElement("option");
+        const option4 = document.createElement("option");
+        const option5 = document.createElement("option");
+        const option6 = document.createElement("option");
+
+        option1.textContent = "";
+        option1.id = "NULL";
+        option2.textContent = "E. Coli";
+        option2.id = "eColi";
+        option3.textContent = "Mycobacterium Tuberculosis";
+        option3.id = "mycobacteriumTuberculosis";
+        option4.textContent = "Clostridium Tetanus";
+        option4.id = "clostridiumTetanus";
+        option5.textContent = "Listeria Monocytogenes";
+        option5.id = "listeriaMonocytogenes";
+        option6.textContent = "Thermus Acquaticus";
+        option6.id = "thermusAcquaticus";
+
         newInput.appendChild(option1);
         newInput.appendChild(option2);
         newInput.appendChild(option3);
         newInput.appendChild(option4);
         newInput.appendChild(option5);
+        newInput.appendChild(option6);
         newInput.id = 'bacteria' + count1;
-        
-         //bacteria2, bacteria3...
-        //container.append("\nSelect Bacteria:");
-        //container.appendChild(newInput);
-        container.appendChild(newInput)
-        // container.insertBefore(newInput, this);
-        //container.innerHTML += ' ';
-        //container.appendChild( document.createTextNode( '\u00A0' ) );
-    }
+        container.appendChild(newInput);
 
+        // saves user input
+        newInput.addEventListener("change", function() {
+            localStorage.setItem("menu" + count1, newInput.value);
+        });
+        //loads past user input
+        if(localStorage.getItem("menu" + count1)){
+            newInput.value = localStorage.getItem("menu" + count1);
+        }
+    }
 });
 
-temp.addEventListener("click", function() {
-
+// adds a new temperautre slide and input box + saves/loads past user input
+addTemp.addEventListener("click", function() {
     if (count2 < 5 && count3 < 6) {
         count2++;
         count3++;
+
         const newSlider = document.createElement("input");
         const newInput = document.createElement("input");
+
         newSlider.type="range";
         newSlider.min=0;
         newSlider.max=100;
         newSlider.value=50;
         newSlider.step=1;
         newInput.value=newSlider.value;
-        newInput.type = "text"
+        newInput.type = "text";
         newSlider.id = "slider" + count2;
 
         const sliderInput = document.createElement("div");
-        
         sliderInput.id = "sliderid";
         sliderInput.classList.add("row");
-        //newSlider.oninput=this.nextElementSibling.value = this.value        
-       // container2.append("Select a Temperature: ");
-       sliderInput.appendChild(newSlider);
-       sliderInput.appendChild(newInput);
-       container2.appendChild(sliderInput) 
-       //container2.insertBefore(newSlider, this);
-        //container2.insertBefore(newInput, this);
+ 
+        // changes corresponding input box to match slider
         newSlider.addEventListener("input", function(){
             newInput.value=newSlider.value;
+            sliderColor(newSlider, newSlider); // changes slider color
+            localStorage.setItem("slider" + count2, newInput.value);
         });
+
+        // changes corresponding slider to match input box
         newInput.addEventListener("input", function(){
             if(newInput.value < 101){
                 newSlider.value=newInput.value;
             }
-            if(newInput.value== 37) {
-                newSlider.style.backgroundColor = `rgb(255, 139, 139)`;
-            }
-            else if(newInput.value==38) {
-                newSlider.style.backgroundColor = `rgb(255, 106, 75)`;
-            }
-            else if(newInput.value== 39) {
-                newSlider.style.backgroundColor = `rgb(255, 69, 2)`;
-            }
-            else if(newInput.value<6) {
-                newSlider.style.backgroundColor = `rgb(0, 0, 255)`;
-            }
-            else if(newInput.value<11) {
-                newSlider.style.backgroundColor = `rgb(93, 0, 255)`;
-            }
-            else if(newInput.value<16) {
-                newSlider.style.backgroundColor = `rgb(123, 0, 255)`;
-            }
-            else if(newInput.value<21) {
-                newSlider.style.backgroundColor = `rgb(152, 0, 255)`;
-            }
-            else if(newInput.value<26) {
-                newSlider.style.backgroundColor = `rgb(191, 0, 255)`;
-            }
-            else if(newInput.value<31) {
-                newSlider.style.backgroundColor = `rgb(216, 0, 255)`;
-            }
-            else if(newInput.value<36) {
-                newSlider.style.backgroundColor = `rgb(255, 0, 255)`;
-            }
-            else if(newInput.value<41) {
-                newSlider.style.backgroundColor = `rgb(255, 0, 182)`;
-            }
-            else if(newInput.value<46) {
-                newSlider.style.backgroundColor = `rgb(255, 0, 114)`;
-            }
-            else if(newInput.value<101) {
-                newSlider.style.backgroundColor = `rgb(231, 38, 0)`;
-            }
-            else{
-                newSlider.style.backgroundColor = `rgb(223, 223, 223)`;
-            }
+            sliderColor(newInput, newSlider); // changes slider color
+            localStorage.setItem("slider" + count2, newSlider.value); // saves user input
         });
-        newSlider.addEventListener("input", function(){
-            theInput.value = slider.value;
+
+        // loads past user input
+        if(localStorage.getItem("slider"+ count2)) {
+            newInput.value = localStorage.getItem("slider" + count2);
+            newSlider.value = localStorage.getItem("slider" + count2);
+            sliderColor(newInput, newSlider);
+        }
         
-            //add this next part inside the other functions
-            // to have the rest of the sliders do the same
-            if(newSlider.value== 37) {
-                newSlider.style.backgroundColor = `rgb(255, 139, 139)`;
-            }
-            else if(newSlider.value==38) {
-                newSlider.style.backgroundColor = `rgb(255, 106, 75)`;
-            }
-            else if(newSlider.value== 39) {
-                newSlider.style.backgroundColor = `rgb(255, 69, 2)`;
-            }
-            else if(newSlider.value<6) {
-                newSlider.style.backgroundColor = `rgb(0, 0, 255)`;
-            }
-            else if(newSlider.value<11) {
-                newSlider.style.backgroundColor = `rgb(93, 0, 255)`;
-            }
-            else if(newSlider.value<16) {
-                newSlider.style.backgroundColor = `rgb(123, 0, 255)`;
-            }
-            else if(newSlider.value<21) {
-                newSlider.style.backgroundColor = `rgb(152, 0, 255)`;
-            }
-            else if(newSlider.value<26) {
-                newSlider.style.backgroundColor = `rgb(191, 0, 255)`;
-            }
-            else if(newSlider.value<31) {
-                newSlider.style.backgroundColor = `rgb(216, 0, 255)`;
-            }
-            else if(newSlider.value<36) {
-                newSlider.style.backgroundColor = `rgb(255, 0, 255)`;
-            }
-            else if(newSlider.value<41) {
-                newSlider.style.backgroundColor = `rgb(255, 0, 182)`;
-            }
-            else if(newSlider.value<46) {
-                newSlider.style.backgroundColor = `rgb(255, 0, 114)`;
-            }
-            else if(newSlider.value<101) {
-                newSlider.style.backgroundColor = `rgb(231, 38, 0)`;
-            }
-            else{
-                newSlider.style.backgroundColor = `rgb(223, 223, 223)`;
-            }
-        
-        })
+        sliderInput.appendChild(newSlider);
+        sliderInput.appendChild(newInput);
+        container2.appendChild(sliderInput);
     }
 });
 
-
+// stores radio input
+// stores if Aerobic
+bubble1.addEventListener("change", function() {
+    if(bubble1.checked) {
+        localStorage.setItem("bubble", 1);
+    }
+});
+// stores if Anaerobic
+bubble2.addEventListener("change", function() {
+    if(bubble2.checked) {
+        localStorage.setItem("bubble", 2);
+    }
+});
