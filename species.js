@@ -1,9 +1,9 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : June 20th, 2024
+// Last Update : June 24th, 2024
 
-/* Purpose : Define config JSON object,
-             Define JSON Objects of bacteria species,
+/* Purpose : Define configuration JSON object (config),
+             Define JSON object of bacteria species (species),
              Define growth function for bacteria (growBacteria),
              Define the main function which runs the simulation (runSimulation)
 */
@@ -25,13 +25,16 @@
 var config = {
     speciesList: [],
     tempList: [],
+    environment: "n",
+    view: "",
     initialNumCells: 1,
-    timeInterval: (60 * 2),
-    graphData: [],
+    timeInterval: (60 * 4),
+    endTime: (60 * 200),
+    graphData: {},
 }
 // additional key-value pairs can be added
 
-/* Description of Each Species Object...
+/* Description of Each Species Key...
    - maxTemp: number (integer),
               highest temperature in degrees Celsius in which bacteria grows
    - minTemp: number (integer),
@@ -59,7 +62,7 @@ const species = {
     maxDivTemp: 37,
     maxDivTime: 20,
     divSlowRate: 0.03,
-    environment: "o"
+    environment: "o",
   },
   mycobacteriumTuberculosis: {
     maxTemp: 55,
@@ -67,7 +70,7 @@ const species = {
     maxDivTemp: 37,
     maxDivTime: (8 * 24 * 60),
     divSlowRate: 0.03,
-    environment: "o"
+    environment: "o",
   },
   clostridiumTetanus: {
     maxTemp: 55,
@@ -75,7 +78,7 @@ const species = {
     maxDivTemp: 37,
     maxDivTime: 60,
     divSlowRate: 0.03,
-    environment: "a"
+    environment: "a",
   },
   listeriaMonocytogenes: {
     maxTemp: 55,
@@ -83,7 +86,7 @@ const species = {
     maxDivTemp: 4,
     maxDivTime: 60,
     divSlowRate: 0.03,
-    environment: "o"
+    environment: "o",
   },
   thermusAquaticus: {
     maxTemp: 99,
@@ -91,7 +94,7 @@ const species = {
     maxDivTemp: 72,
     maxDivTime: 40,
     divSlowRate: 0.03,
-    environment: "o"
+    environment: "o",
   }
 }
 /* Additional Notes for Team
@@ -109,52 +112,61 @@ const species = {
 // and push/append them to workingList, preparing workingList for use
 // Afterwards, the newly prepared workingList is used to define data0, a JSON
 // object/variable which represents the data of each species before growth
-// Pre : workingList is declared a global variable and is initialized as an
-//       empty list
+// Pre : workingList is declared a global variable;
+//       temp is a number (integer variable) representing the given temperature
 // Post : the length of workingList is equal to the length of config.speciesList
 //        (the list of species chosen by the user), its content are JSON objects
 //        representing information and the state of the chosen species;
+//        numIntervals is incremented by '1';
 //        data0 is added to config.graphData
-function prepareWorkingList() {
+function prepareWorkingList(temp) {
+  workingList = [];   // reset workingList
   for(let i = 0; i < config.speciesList.length; i++) {   // prepare workingList
     workingList.push({
         name: config.speciesList[i],
-        temp: config.tempList[i % config.tempList.length],
+        // temp: config.tempList[i % config.tempList.length],
         viable: species[config.speciesList[i]].environment == "b" ||
                 config.environment == "n" ||
                 config.environment == species[config.speciesList[i]].environment,
         timeOverflow: 0,
         divCount: 0,
         numCells: config.initialNumCells,
-        testNutrient: 1.00,   // can be set to variable respective inside species
+        testNutrient: 0.40,   // can be set to variable respective inside species
     })
   }
+  console.log(workingList);     /********** PRINT - LEAVE OUT **********/
 
   let data0 = {};   // data JSON object holding information before growth
+  data0.interval = numIntervals;
   for(let i = 0; i < workingList.length; i++) {
     data0[workingList[i].name] = workingList[i].numCells;
   }
-  config.graphData.push(data0);
+  config.graphData[`@${temp}`].push(data0);
+  numIntervals++;
 }
 /* Additional Notes
    - Any other initial setup necessary to implement the addition of the JSON
      objects (which are the content of workingList) can be placed inside the
      function
+   - data0 is constructed and added to config.graphData inside
+     prepareWorkingList to ensure it is constructed when workingList is newly
+     initialized
 */
 
 // Grows bacteria and stores relevant data as a JSON object in config.graphData
 // Accesses global variables config and species JSON object
-// Pre : none
+// Pre : temp is a number (integer) variable representing the given temperature
 // Post : numIntervals is incremented by '1';
-//        a data JSON object is pushed/appended ot config.graphData
-function growBacteria() {
+//        a data JSON object is pushed/appended to config.graphData
+function growBacteria(temp) {
   let data = {};
+  data.interval = numIntervals;
 
   for(let i = 0; i < config.speciesList.length; i++) {
     let speciesKey = config.speciesList[i];   // name of species, used as key
     let divTime = species[speciesKey].maxDivTime * (1 + (
       species[speciesKey].divSlowRate * (
-        Math.abs(species[speciesKey].maxDivTemp - workingList[i].temp)
+        Math.abs(species[speciesKey].maxDivTemp - temp)
       )
     ));
     let d = Math.floor(
@@ -163,8 +175,8 @@ function growBacteria() {
     let newNumCells = workingList[i].numCells;
       // number of cells after growth (and/or death)
 
-    if(workingList[i].temp > species[speciesKey].maxTemp ||
-       workingList[i].temp < species[speciesKey].minTemp ||
+    if(temp > species[speciesKey].maxTemp ||
+       temp < species[speciesKey].minTemp ||
        !workingList[i].viable ||
        workingList[i].testNutrient <= 0) {
       
@@ -182,7 +194,7 @@ function growBacteria() {
         if(workingList[i].testNutrient > 0) {
           newNumCells = Math.floor(newNumCells * 2);
 
-          if(workingList[i].testNutrient <= 0.20) {
+          if(workingList[i].testNutrient <= 0.2) {
             workingList[i].divCount++;
 
             if(workingList[i].divCount % 7 == 0) {
@@ -190,9 +202,14 @@ function growBacteria() {
               newNumCells = Math.floor(newNumCells * (1 - 0.90));
             }
           }
+
+          if(workingList[i].testNutrient <= 0.3) {
+            newNumCells = Math.floor(newNumCells * (1 - 0.10));
+          }
         }
       }
-      
+      //console.log(speciesKey, ": ", divTime, d, newNumCells);     /********** PRINT - LEAVE OUT **********/
+
       workingList[i].timeOverflow = Math.round(
         (config.timeInterval + workingList[i].timeOverflow) % divTime
       );
@@ -200,9 +217,13 @@ function growBacteria() {
 
     workingList[i].numCells = newNumCells;
     data[speciesKey] = newNumCells;
+    if(newNumCells > highestY) {
+      highestY = newNumCells;
+    }
   }
 
-  config.graphData.push(data);
+  config.graphData[`@${temp}`].push(data);
+  numIntervals++;
 }
 /* Additional Notes
    - there are no necessary pre-conditions, but it is preferred config and
@@ -211,9 +232,8 @@ function growBacteria() {
    - data holds the number of cells at the current time interval,
      these data objects are pushed (end of list) to config.graphData,
      constructing a list which can be used to produce a line graph
-     !! Assumption: line graph is constructed with D3; another library may need
-                    a different variable/structure for the data !!
 */
 
-/* Simulation Variables */
+/*** Simulation Variables ***/
+var numIntervals = 0;
 var workingList = [];
