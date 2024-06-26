@@ -1,11 +1,10 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : June 24th, 2024
+// Last Update : June 26th, 2024
 
 /* Purpose : Define configuration JSON object (config),
              Define JSON object of bacteria species (species),
-             Define growth function for bacteria (growBacteria),
-             Define the main function which runs the simulation (runSimulation)
+             Define growth function for bacteria (growBacteria)
 */
 
 /* Description of Configuration Object...
