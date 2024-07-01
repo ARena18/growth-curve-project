@@ -2,7 +2,7 @@
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   JavaScript File : script.js
   Purpose : Define the main page of the Growth Curve Simulation
-  Last Update : June 25th, 2024
+  Last Update : July 1st, 2024
 */
 
 const viewMenu = document.getElementById("view"); // view select menu
@@ -18,9 +18,6 @@ const bubble2 = document.getElementById("bubble2"); // radio bubble: Anaerobic
 
 // html forms
 const form1 = document.getElementById("form1"); // html form
-const form2 = document.getElementById("form2"); // html form
-const form3 = document.getElementById("form3"); // html form
-const form4 = document.getElementById("form4"); // html form
 
 // Nondynamic: temperature slider/inputbox and bacteria menu
 const slider1 = document.getElementById("slider1"); // initial slider
@@ -59,11 +56,9 @@ function reloadData(){
 }
 
 // submit
-submitButton.addEventListener("click", function(){
-    form1.requestSubmit();
-    form2.requestSubmit();
-    form3.requestSubmit();
-    form4.requestSubmit();
+form1.addEventListener("submit", function(event){
+    event.preventDefault();
+    // var collectData = new FormData(event.target);
 });
 
 // slider colors
@@ -164,17 +159,17 @@ bacteria.addEventListener("click", function() {
         const option6 = document.createElement("option");
 
         option1.textContent = "";
-        option1.id = "NULL";
+        option1.value = "NULL";
         option2.textContent = "E. Coli";
-        option2.id = "eColi";
+        option2.value = "eColi";
         option3.textContent = "Mycobacterium Tuberculosis";
-        option3.id = "mycobacteriumTuberculosis";
+        option3.value = "mycobacteriumTuberculosis";
         option4.textContent = "Clostridium Tetanus";
-        option4.id = "clostridiumTetanus";
+        option4.value = "clostridiumTetanus";
         option5.textContent = "Listeria Monocytogenes";
-        option5.id = "listeriaMonocytogenes";
+        option5.value = "listeriaMonocytogenes";
         option6.textContent = "Thermus Acquaticus";
-        option6.id = "thermusAcquaticus";
+        option6.value = "thermusAcquaticus";
 
         newInput.appendChild(option1);
         newInput.appendChild(option2);
@@ -217,6 +212,9 @@ addTemp.addEventListener("click", function() {
         const sliderInput = document.createElement("div");
         sliderInput.id = "sliderid";
         sliderInput.classList.add("row");
+
+        sliderColor(newInput, newSlider);
+        localStorage.setItem("slider" + count2, newSlider.value);
  
         // changes corresponding input box to match slider
         newSlider.addEventListener("input", function(){
