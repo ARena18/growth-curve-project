@@ -338,7 +338,7 @@ function addTable(temp) {
   let article = document.createElement("article");
   let h2 = document.createElement("h2");
   let title = document.createTextNode(
-    `Data @ ${config.tempList[config.tempList.length-1]}°C`
+    `Data @ ${temp}°C`
   );
   h2.appendChild(title);
   article.appendChild(h2);
