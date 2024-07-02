@@ -1,6 +1,6 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : June 26th, 2024
+// Last Update : July 2nd, 202
 
 /* Purpose : Define configuration JSON object (config),
              Define JSON object of bacteria species (species),
@@ -240,7 +240,6 @@ function growBacteria(temp) {
           }
         }
       }
-      //console.log(speciesKey, ": ", divTime, d, newNumCells);     /********** PRINT - LEAVE OUT **********/
 
       workingList[i].timeOverflow = Math.round(
         (config.timeInterval + workingList[i].timeOverflow) % divTime
@@ -304,9 +303,9 @@ function display() {
     } else if(config.view == "cross-section") {
       // cross section function
     } else {
-      // formatting/organizing data
+      // formatting/organizing data for graphs
       let displaySpecies = speciesGroup.filter( (species) => config.speciesList.indexOf(species.name) >= 0);
-      console.log(displaySpecies);     /********** PRINT - LEAVE OUT **********/
+      
       let data = displaySpecies.map(function(group) {
         return {
           name: group.name,
@@ -340,7 +339,7 @@ function addTable(temp) {
   let article = document.createElement("article");
   let h2 = document.createElement("h2");
   let title = document.createTextNode(
-    `Data @ ${config.tempList[config.tempList.length-1]}°C`
+    `Data @ ${temp}°C`
   );
   h2.appendChild(title);
   article.appendChild(h2);
@@ -632,14 +631,12 @@ function addLog10Graph(temp, data) {
     .text(`Log10 Bacteria Growth at ${temp} °C`);
 }
 
-// Reset simulation variables to their initial state
+// Reset configuration lists/variables to their initial state
 // Pre : none
-// Post : numIntervals is assigned '0';
-//        config.speciesList SHOULD BE assigned an empty list;
+// Post : config.speciesList SHOULD BE assigned an empty list;
 //        config.tempList is assigned an empty list;
 //        config.graphData is assigned an empty list
-function resetSimulation() {
-  numIntervals = 0;
+function resetConfiguration() {
   config.speciesList = [];
   config.tempList = [];
   config.graphData = [];
@@ -651,14 +648,14 @@ function resetSimulation() {
 // Post : config.graphData (the list of data used to plot the line graphs) is
 //        properly populated with data JSON objects
 function runSimulation() {
-  resetSimulation();
+  resetConfiguration();
 
   reflectUI();
   
   config.tempList.forEach( (temp) => {
+    numIntervals = 0;
     gatherData(temp);
   })
-  console.log(config.graphData);   /********** PRINT - LEAVE OUT **********/
 
   display();
 }
@@ -707,28 +704,3 @@ const myColor = d3.scaleOrdinal()   // color scheme for line graphs
 const margin = {top: 40, right: 50, bottom: 50, left: 100},
   width = 1000 - margin.left - margin.right,
   height = 600 - margin.top - margin.bottom;
-
-const Tooltip = d3.select("#value")   // tooltip
-  .style("opacity", 0)
-  .attr("class", "tooltip")
-  .style("background-color", "white")
-  .style("border", "solid")
-  .style("border-width", "1px")
-  .style("border-radius", "5px")
-  .style("padding", "5px");
-
-/* 3 Functions that change Tooltip */
-const mouseover = function(d) {   // when the user hovers over a cell
-  Tooltip
-    .style("opacity", 1);
-}
-const mousemove = function(d) {   // when the user moves over a cell
-  Tooltip
-    .html("Exact R Value: " + d.value)
-    .style("left", (d3.mouse(this)[0]+70) + "px")
-    .style("bottom", (d3.mouse(this)[1]) + "px");
-}
-const mouseleave = function(d) {   // when the user leaves a cell
-  Tooltip
-    .style("opacity", 0);
-}

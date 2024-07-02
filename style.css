@@ -1,4 +1,245 @@
-table {
+/*
+  Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+  CSS File : style.css
+  Last Update : July 2nd, 2024
+
+  Purpose : Define the styling of the Growth Curve Simulation's main page
+*/
+
+* { /* background */
+    font-family: Calibri;
+    font-size: 110%;
+}
+body {
+  background-color: rgb(132, 163, 255);
+}
+.topbox{ /* title box */
+    display: flex;
+    background: rgb(59, 104, 255);
+    flex-direction: column;
+    margin-top: -8px;
+    margin-left: -8px;
+    margin-right: -8px;
+    margin-bottom: -8px;
+}
+h1{ /* title text */
+    color: #ffffff;
+    display: flex;
+    text-indent: 50px;
+    font-size: 150%;
+    background-color: rgb(59, 104, 255);
+    margin-top: 0px;
+    margin-bottom: 10px;
+}
+
+.view {
+    margin-top: -10px;
+}
+
+/* select menus */
+select{
+    cursor: pointer;
+}
+
+/* color key */
+.colorBox{
+    display: inline-flex;
+    background-color: rgb(223, 223, 223);
+    margin-left: 3px;
+    width: 300px;
+    height: 30px;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 15px;
+    text-indent: -30px;;
+    margin: 0px;    
+}
+/* Human Body */
+.box1 {
+    display: flex;
+    background-color: rgb(255, 139, 139);
+    width: 30px;
+    height: 20px;
+    margin-left: -30px;
+    margin-right: 0px;
+}
+/* Fever */
+.box2 {
+    display: flex;
+    background-color: rgb(255, 69, 2);
+    width: 30px;
+    height: 20px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+/* buttons */
+button, select{
+    background-color: white;
+    font-size: 75%;
+}
+button:hover{
+    opacity: .6;
+    cursor: pointer;
+}
+
+/* Bacteria Menus Container */
+#menuContainer{
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+/* sliders */
+.slider1 {
+    display: flex;
+}
+input[type="range"]{
+    -webkit-appearance: none;
+    background-color: rgb(223, 223, 223);
+    width: 400px;
+    border-radius: 5px;
+    height: 12px;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 17px; 
+    height: 17px;
+    border-radius: 50%;
+    background: rgb(171, 171, 171);
+    cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+    opacity: 0.8;
+}
+/* Slider Text Boxes */
+input[type="text"]{
+    background-color: white;
+    width: 30px;
+    font-size: 15px;
+    cursor: pointer;
+}
+.sliders {
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 200px;
+}
+.row {
+    display: flex;
+    flex-direction: row;
+}
+#temperatures {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+#sliderInputBox1 {
+    margin-left: -6px;
+}
+
+/* Radio */
+input[type="radio"]{
+    cursor: pointer;
+}
+
+/* Additional Information Section */
+/* General Information Text */
+.moreInfo {
+    font-size: 17px;
+  }
+
+/* Phases */
+.toolTip1, .toolTip2, .toolTip3, .toolTip4, .toolTip5 {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+.toolTip1 .text1 {
+    display: flex;
+    visibility: hidden;
+    width: 400px; 
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -40px; 
+}
+/* bottom arrow */
+.toolTip1 .text1::after {
+    display: flex;
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 10%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.toolTip1:hover .text1, .toolTip2:hover .text2, .toolTip3:hover .text3, .toolTip4:hover .text4, .toolTip5:hover .text5  {
+    display: flex;
+    visibility: visible;
+}
+.toolTip2 .text2 {
+    display: flex;
+    visibility: hidden;
+    width: 200px; 
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 120%;
+    margin-left: -205px; 
+}
+.toolTip2 .text2::after, .toolTip3 .text3::after, .toolTip4 .text4::after, .toolTip5 .text5::after {
+    display: flex;
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+}
+.toolTip3 .text3, .toolTip4 .text4, .toolTip5 .text5 {
+    display: flex;
+    visibility: hidden;
+    width: 400px; 
+    background-color: black;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 150%;
+    left: 50%;
+    margin-left: -205px; 
+}
+
+div#displayContainer { /* display box styling */
+    background-color: white;
+    font-size: x-small;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+table { /* table */
     text-align: center;
     margin: 10px;
 }
