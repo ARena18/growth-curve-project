@@ -1,25 +1,178 @@
 <!DOCTYPE html>
 <html>
 
-<!-- 
-  Authors : Rena Ahn, Gina Philipose, Zachary Mullen
-  HTML File : index.html
-  Purpose : Define the main page of the Growth Curve Simulation
+  <!-- 
+    Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+    HTML File : index.html
+    Purpose : Define the main page of the Growth Curve Simulation
+    Last Update : July 1st, 2024
+  -->
 
-  Last Update : June 16th, 2024
--->
+  <head>
+    <title>Growth Curve Project</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
 
-<head>
-  <title>Growth Curve Project</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <link href="style.css" rel="stylesheet" type="text/css" />
-</head>
+  <body>
+    <div class="topbox">
+    <h1>Growth Curve Project</h1> 
+    <h1>Bacterial Growth and Temperature Simulation </h1>
+    </div>
+    
+      <!--Select View-->
+        <br>
+        <form id="form1">
+          <div class="view">
+            <label for="view"> Select View: </label>
+            <select id="view">
+              <option value="linear">Linear</option>
+              <option value="log2">log_2</option>
+              <option value="log10">log_10</option>
+              <option value="cross-section">Cross-Section</option>
+            </select>
+          </div>
+        <br>
 
-<body>
-  <h1>Growth Curve Project</h1>
+        <!--Select Bacteria(First Menu)-->
+      
+          <div class="bacteria1">
+            <label for="bacteria1"> Select Bacteria: </label>
+            <br>
+            <select id="bacteria1">
+              <option value="NULL"> </option>
+              <option value="eColi">E. Coli</option>
+              <option value="mycobacteriumTuberculosis">Mycobacterium Tuberculosis</option>
+              <option value="clostridiumTetanus">Clostridium Tetanus</option>
+              <option value="listeriaMonocytogenes">Listeria Monocytogenes</option>
+              <option value="thermusAcquaticus">Thermus Acquaticus</option>
+            </select>
+          </div>
 
-  <script src="species.js"></script>
-</body>
+          <!--Adding more menus-->
+          <div id="menuContainer"></div>
+      
 
+        <!--Add/Remove Bacteria Buttons-->
+        <div id="buttonsContainer">
+          <button id="addBacteria" type="button"> Add Bacteria </button>
+          <button id="removeBacteria" type="button"> Remove Bacteria</button>
+        </div>
+        <br>
+
+        <!--Select Temperature(First Slider and Input Box)-->
+
+          <label for="slider1">Select Temperature (Celsius)</label>
+          <div class="range1"> 
+            <input type="range" value="50" min="0" max="100" id="slider1">
+            <input type="text" id="sliderInputBox1" value="50"> 
+          </div>
+
+          <!--Adding more sliders/input boxes-->
+          <div id="temperatures"></div>
+      
+
+        <!--Slider Color Key-->
+        <div class="colorBox">
+          <div class="box1"></div>
+          Human Body
+          <div class="box2"></div>
+          Fever
+        </div>
+
+        <!--Add/Remove Temperature Buttons-->
+        <div id="tempContainer">
+          <button id="addTemp" type="button"> Add Temperature </button>
+          <button id="removeTemp" type="button"> Remove Temperature</button>
+        </div>
+        <br>
+        
+        <!--Radio Bubbles-->
+    
+          <div class="radioContainer">
+            <label for="bubble1">
+              <input type="radio" id="bubble1" value="o" name="oxy">
+              Aerobic
+            </label>
+            <br>
+            <label for="bubble2">
+              <input type="radio" id="bubble2" value="a" name="oxy">
+              Anaerobic
+            </label>
+          </div>
+          <br>
+        
+
+        <!--Overall Submission Button-->
+        <button id="submitButton" type="submit"> Run Simulation</button>
+      </form>
+      <br>
+
+      <!--Purpose/Information Section-->
+      <!--General Information-->
+      The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.
+      <br> <br>
+      Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
+      psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
+      temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
+      through four phases:
+      <br> <br>
+
+      <!--Phase Information-->
+      <i>
+        <div class="moreInfo">
+
+          <!--Lag Phase-->
+          <div class="toolTip1">
+            lag phase,
+            <span class="text1">
+              When bacteria is introduced to a new medium, the bacterial population needs to adapt to the new environment; instead of immediately 
+              going through cell division, bacteria take time to create enzymes that are necessary for cell division and population growth in this
+              environment.
+            </span>
+          </div>
+          
+          <!--Exponential Phase-->
+          <div class="toolTip2">
+            exponential phase,
+            <span class="text2">
+              After the population has adapted to the environment, the cell population increases exponentially until all resources and nutrients 
+              have run out.
+            </span>
+          </div>
+    
+          <!--Stationary Phase-->
+          <div class="toolTip3">
+            stationary phase,
+            <span class="text3">
+              Once all nutrients have been used up, the population stays constant as some cells die and others continue to divide. The length of 
+              the stationary phase may depend on species and medium as some bacteria can remain viable for long periods of time even when starved 
+              of nutrients.
+            </span>
+          </div>
+          
+          <!--Prolonged Phase of Decline-->
+          <div class="toolTip4">
+            prolonged phase of decline,
+            <span class="text4">
+              An extended period where the bacteria present continue to gradually decrease in number.
+            </span>
+          </div> and
+          
+          <!--Death Phase-->
+          <div class="toolTip5">
+            death phase.
+            <span class="text5">
+              Death phase is characterized by an exponential decrease in the number of living cells. During this time, cells die at a greater rate 
+              than they are dividing.
+            </span>
+          </div>
+        </div>
+      </i>
+
+      <!--JavaScript Files-->
+      <script src="script.js"></script>
+      <script src="species.js"></script>
+  </body>
 </html>
