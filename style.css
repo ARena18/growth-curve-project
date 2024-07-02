@@ -231,7 +231,12 @@ input[type="radio"]{
 
 div#displayContainer { /* display box styling */
     background-color: white;
-    font-size: xx-small;
+    font-size: x-small;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
 }
 
 table { /* table */
