@@ -1,10 +1,14 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : June 26th, 2024
+// Last Update : July 2nd, 2024
 
 /* Purpose : Define configuration JSON object (config),
              Define JSON object of bacteria species (species),
-             Define growth function for bacteria (growBacteria)
+             Define growth function for bacteria (growBacteria),
+             Define reflect function which updates the configuration JSON object
+               according to frontend user input (reflectUI),
+             Define display function which displays the chosen mode of view (display),
+             Define the main function which runs the simulation (runSimulation),
 */
 
 /* Description of Configuration Object...
@@ -27,7 +31,7 @@ var config = {
     environment: "n",
     view: "",
     initialNumCells: 1,
-    timeInterval: (60 * 4),
+    timeInterval: (60 * 12),
     endTime: (60 * 200),
     graphData: {},
 }
@@ -107,6 +111,36 @@ const species = {
      therefore the objects are constants
 */
 
+// Reflect user input onto config JSON object
+// Pre : appropriate HTML elements are available
+// Post : config.speciesList has the species to be displayed for the simulation;
+//        config.tempList has the temperatures to be applied in the simulation;
+//        environment reflects the chosen condition ("o"-oxygen, "a"-anaerobic)
+function reflectUI() {
+  let num = 1;
+  let bacteriaInput = document.getElementById(`bacteria${num}`);
+  while(bacteriaInput) {
+    if(bacteriaInput.value == "NULL") { break; }
+
+    config.speciesList.push(bacteriaInput.value);
+    num++;
+    bacteriaInput = document.getElementById(`bacteria${num}`);
+  }
+
+  num = 1;
+  let tempInput = document.getElementById(`slider${num}`);
+  while(tempInput) {
+    config.tempList.push(parseInt(tempInput.value));
+    config.graphData[`@${tempInput.value}`] = [];
+    num++;
+    tempInput = document.getElementById(`slider${num}`);
+  }
+
+  let environmentInput = document.querySelector('input[name="oxy"]:checked');
+  config.environment = environmentInput.value[0];
+    // can remove bracket notation once code updated
+}
+
 // Generate objects which represent the state of each species in the simulation
 // and push/append them to workingList, preparing workingList for use
 // Afterwards, the newly prepared workingList is used to define data0, a JSON
@@ -123,7 +157,6 @@ function prepareWorkingList(temp) {
   for(let i = 0; i < config.speciesList.length; i++) {   // prepare workingList
     workingList.push({
         name: config.speciesList[i],
-        // temp: config.tempList[i % config.tempList.length],
         viable: species[config.speciesList[i]].environment == "b" ||
                 config.environment == "n" ||
                 config.environment == species[config.speciesList[i]].environment,
@@ -133,7 +166,6 @@ function prepareWorkingList(temp) {
         testNutrient: 0.40,   // can be set to variable respective inside species
     })
   }
-  console.log(workingList);     /********** PRINT - LEAVE OUT **********/
 
   let data0 = {};   // data JSON object holding information before growth
   data0.interval = numIntervals;
@@ -207,7 +239,6 @@ function growBacteria(temp) {
           }
         }
       }
-      //console.log(speciesKey, ": ", divTime, d, newNumCells);     /********** PRINT - LEAVE OUT **********/
 
       workingList[i].timeOverflow = Math.round(
         (config.timeInterval + workingList[i].timeOverflow) % divTime
@@ -233,6 +264,442 @@ function growBacteria(temp) {
      constructing a list which can be used to produce a line graph
 */
 
+// Gathers data on the growth of select species at temp (parameter)
+// Utilizes the function(s)... growBacteria
+// Pre : temp is a number (integer) variable representing the given temperature
+// Post : data JSON objects are pushed/appended to config.graphData[`@${temp}`]
+function gatherData(temp) {
+  prepareWorkingList(temp);
+
+  while((config.timeInterval * numIntervals) < config.endTime) {
+    growBacteria(temp);
+  }
+}
+
+// Determines method of display and calls the related function
+// Utilizes the function(s)... addTable, addGraph, addLog2Graph, addLog10Graph
+// Pre : none
+// Post : config.view is assigned to the newly chosen view;
+//        HTML elements which display growth data are added
+function display() {
+  // clear container based on previous view
+  if(config.view == "table") {
+    let container = document.getElementById("displayContainer");
+    while(container.hasChildNodes()) {
+      container.removeChild(container.firstChild);
+    }
+  } else {   // line graphs
+    d3.selectAll("svg").remove();
+  }
+
+  // update view
+  let viewInput = document.getElementById("view");
+  config.view = viewInput.value;
+
+  config.tempList.forEach( (temp) => {
+    if(config.view == "table") {
+      addTable(temp);
+    } else if(config.view == "cross-section") {
+      // cross section function
+    } else {
+      // formatting/organizing data for graphs
+      let displaySpecies = speciesGroup.filter( (species) => config.speciesList.indexOf(species.name) >= 0);
+      
+      let data = displaySpecies.map(function(group) {
+        return {
+          name: group.name,
+          label: group.label,
+          color: group.color,
+          values: config.graphData[`@${temp}`].map(function(d) {
+            return {
+              time: (config.timeInterval * d.interval) / 60,
+              value: d[group.name]
+            }
+          })
+        }
+      })
+
+      // adding appropriate graph
+      if(config.view == "linear") {
+        addGraph(temp, data);
+      } else if(config.view == "log2") {
+        addLog2Graph(temp, data);
+      } else {
+        addLog10Graph(temp, data);
+      }
+    }
+  })
+}
+
+// Adds a table (hour intervals) using growth data stored in config.graphData
+// Pre : temp is a number (integer) variable representing the given temperature
+// Post : a table is added to 'displayContainer' (HTML div element)
+function addTable(temp) {
+  let article = document.createElement("article");
+  let h2 = document.createElement("h2");
+  let title = document.createTextNode(
+    `Data @ ${config.tempList[config.tempList.length-1]}°C`
+  );
+  h2.appendChild(title);
+  article.appendChild(h2);
+
+  let table = document.createElement("table");   // table element
+  let tHead = table.createTHead();               // thead element
+  let headRow = tHead.insertRow();               // header row (tr element)
+
+  let headerColumns = ["Time (Hours)"];          // columns to display
+  speciesGroup.forEach( (species) => {
+    if(config.speciesList.indexOf(species.name) >= 0) {
+      headerColumns.push(species.label);
+    }
+  })
+
+  headerColumns.forEach( (column) => {     // populating header row
+    let th = document.createElement("th");       // Data Column (th element)
+    let text = document.createTextNode(column);
+    th.appendChild(text);
+    headRow.appendChild(th);
+  })
+  tHead.appendChild(headRow);
+  table.appendChild(tHead);
+
+  let tBody = table.createTBody();
+  for(let i = 0; i < config.graphData[`@${temp}`].length; i++) {   // populating data rows
+    let newRow = tBody.insertRow();
+    newRow.insertCell().textContent = `${i * (config.timeInterval / 60)}`;
+    config.speciesList.forEach( (species) => {
+      newRow.insertCell().textContent = `${config.graphData[`@${temp}`][i][species]}`;
+    })
+  }
+
+  let container = document.getElementById("displayContainer");
+  article.appendChild(table);
+  container.appendChild(article);
+}
+
+// Adds a linear graph (hour intervals) using growth data stored in config.graphData
+// Pre : temp is a number (integer) variable representing the given temperature
+// Post : a line graph is added to 'displayContainer' (HTML div element)
+function addGraph(temp, data) {
+  var svg = d3.select("#displayContainer")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  var x = d3.scaleLinear()   // x axis
+    .domain([0, (config.endTime / 60)])
+    .range([0, width]);
+  svg.append("g")   // adding x axis
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+  svg.append("text")   // x axis label
+    .style("text-anchor", "middle")
+    .attr("x", width / 2)
+    .attr("y", height + margin.top)
+    .text("Time (Hours)");
+  var y = d3.scaleLinear()   // y axis
+    .domain([0, highestY])
+    .range([height, 0]);
+  svg.append("g")   // adding y axis
+    .call(d3.axisLeft(y));
+  svg.append("text")   // y axis label
+    .style("text-anchor", "middle")
+    .attr("y", 0 - margin.left)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("transform", "rotate(-90)")
+    .text("Number of Cells");
+  
+  var line = d3.line()   // data line
+    .x(function(d) { return x(d.time) })
+    .y(function(d) { return y(d.value) })
+    .curve(d3.curveBasis);
+  svg.selectAll("myLines")
+    .data(data)
+    .enter()
+    .append("path")
+      .attr("class", function(d) { return d.name })
+      .attr("d", function(d) { return line(d.values) })
+      .attr("stroke", function(d) { return myColor(d.name) })
+      .style("stroke-width", 2)
+      .style("fill", "none");
+  svg.selectAll("myDots")   // adding the points
+    .data(data)
+    .enter()
+      .append("g")
+      .style("fill", function(d) { return myColor(d.name) })
+      .attr("class", function(d) { return d.name })
+    .selectAll("myPoints")
+    .data(function(d) { return d.values })
+    .enter();
+  svg.selectAll("myLegend")   // adding interactive legend
+    .data(data)
+    .enter()
+      .append("g")
+      .append("text")
+        .attr("x", width - 200)
+        .attr("y", function(d, i) { return i * 40 })
+        .text(function(d) { return d.label })
+        .style("fill", function(d) { return myColor(d.name) })
+        .style("font-size", 15)
+      .on("click", function(d) {
+        let currentOpacity = d3.selectAll("." + d.name).style("opacity");
+        d3.selectAll("." + d.name)
+          .transition()
+          .style("opacity", currentOpacity == 1 ? 0 : 1);
+      });
+  svg.append("text")   // adding a title
+    .attr("x", 0 - (margin.left))
+    .attr("y", 0 - (margin.top / 2))
+    .attr("text-anchor", "left")
+    .style("font-size", "16px")
+    .text(`Bacteria Growth at ${temp} °C`);
+}
+
+// Adds a log2 graph (hour intervals) using growth data stored in config.graphData
+// Pre : temp is a number (integer) variable representing the given temperature
+// Post : a log2 line graph is added to 'displayContainer' (HTML div element)
+function addLog2Graph(temp, data) {
+  var svg = d3.select("#displayContainer")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  var x = d3.scaleLinear()   // x axis
+    .domain([0, config.endTime / 60])
+    .range([0, width]);
+  svg.append("g")   // adding x axis
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+  svg.append("text")   // x axis label
+    .style("text-anchor", "middle")
+    .attr("x", width / 2)
+    .attr("y", height + margin.top)
+    .text("Time (Hours)");
+  var y = d3.scaleLog()   // y axis
+    .domain([1, Math.log2(highestY)])
+    .range([height, 0])
+    .base(2);
+  svg.append("g")   // adding y axis
+    .call(d3.axisLeft(y));
+  svg.append("text")   // y axis label
+    .style("text-anchor", "middle")
+    .attr("y", 0 - margin.left)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("transform", "rotate(-90)")
+    .text("Number of Cells");
+  
+  var line = d3.line()   // data line
+    .x(function(d) { return x(d.time) })
+    .y(function(d) {
+      if(d.value <= 1) {
+        return y(1)
+      } else {
+        return y(Math.log2(d.value))
+      }
+    })
+    .curve(d3.curveBasis);
+  svg.selectAll("myLines")
+    .data(data)
+    .enter()
+    .append("path")
+      .attr("class", function(d) { return d.name })
+      .attr("d", function(d) { return line(d.values) })
+      .attr("stroke", function(d) { return myColor(d.name) })
+      .style("stroke-width", 2)
+      .style("fill", "none");
+  svg.selectAll("myDots")   // adding the points
+    .data(data)
+    .enter()
+      .append("g")
+      .style("fill", function(d) { return myColor(d.name) })
+      .attr("class", function(d) { return d.name })
+    .selectAll("myPoints")
+    .data(function(d) { return d.values })
+    .enter();
+  svg.selectAll("myLegend")   // adding interactive legend
+    .data(data)
+    .enter()
+      .append("g")
+      .append("text")
+        .attr("x", width - 200)
+        .attr("y", function(d, i) { return i * 40 })
+        .text(function(d) { return d.label })
+        .style("fill", function(d) { return myColor(d.name) })
+        .style("font-size", 15)
+      .on("click", function(d) {
+        let currentOpacity = d3.selectAll("." + d.name).style("opacity");
+        d3.selectAll("." + d.name)
+          .transition()
+          .style("opacity", currentOpacity == 1 ? 0 : 1);
+      });
+  svg.append("text")   // adding a title
+    .attr("x", 0 - (margin.left))
+    .attr("y", 0 - (margin.top / 2))
+    .attr("text-anchor", "left")
+    .style("font-size", "16px")
+    .text(`Log2 Bacteria Growth at ${temp} °C`);
+}
+
+// Adds a log10 graph (hour intervals) using growth data stored in cofig.graphData
+// Pre : temp is a number (integer) variable representing the given temperature
+// Post : a log10 line graph is added to 'displayContainer' (HTML div element)
+function addLog10Graph(temp, data) {
+  var svg = d3.select("#displayContainer")
+    .append("svg")
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  var x = d3.scaleLinear()   // x axis
+    .domain([0, config.endTime / 60])
+    .range([0, width]);
+  svg.append("g")   // adding x axis
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+  svg.append("text")   // x axis label
+    .style("text-anchor", "middle")
+    .attr("x", width / 2)
+    .attr("y", height + margin.top)
+    .text("Time (Hours)");
+  var y = d3.scaleLog()   // y axis
+    .domain([1, Math.log10(highestY)])
+    .range([height, 0]);
+  svg.append("g")   // adding y axis
+    .call(d3.axisLeft(y));
+  svg.append("text")   // y axis label
+    .style("text-anchor", "middle")
+    .attr("y", 0 - margin.left)
+    .attr("x", 0 - (height / 2))
+    .attr("dy", "1em")
+    .attr("transform", "rotate(-90)")
+    .text("Number of Cells");
+  
+  var line = d3.line()   // data line
+    .x(function(d) { return x(d.time) })
+    .y(function(d) {
+      if(d.value <= 1) {
+        return y(1)
+      } else {
+        return y(Math.log10(d.value))
+      }
+    })
+    .curve(d3.curveBasis);
+  svg.selectAll("myLines")
+    .data(data)
+    .enter()
+    .append("path")
+      .attr("class", function(d) { return d.name })
+      .attr("d", function(d) { return line(d.values) })
+      .attr("stroke", function(d) { return myColor(d.name) })
+      .style("stroke-width", 2)
+      .style("fill", "none");
+  svg.selectAll("myDots")   // adding the points
+    .data(data)
+    .enter()
+      .append("g")
+      .style("fill", function(d) { return myColor(d.name) })
+      .attr("class", function(d) { return d.name })
+    .selectAll("myPoints")
+    .data(function(d) { return d.values })
+    .enter();
+  svg.selectAll("myLegend")   // adding interactive legend
+    .data(data)
+    .enter()
+      .append("g")
+      .append("text")
+        .attr("x", width - 200)
+        .attr("y", function(d, i) { return i * 40 })
+        .text(function(d) { return d.label })
+        .style("fill", function(d) { return myColor(d.name) })
+        .style("font-size", 15)
+      .on("click", function(d) {
+        let currentOpacity = d3.selectAll("." + d.name).style("opacity");
+        d3.selectAll("." + d.name)
+          .transition()
+          .style("opacity", currentOpacity == 1 ? 0 : 1);
+      });
+  svg.append("text")   // adding a title
+    .attr("x", 0 - (margin.left))
+    .attr("y", 0 - (margin.top / 2))
+    .attr("text-anchor", "left")
+    .style("font-size", "16px")
+    .text(`Log10 Bacteria Growth at ${temp} °C`);
+}
+
+// Reset configuration lists/variables to their initial state
+// Pre : none
+// Post : config.speciesList SHOULD BE assigned an empty list;
+//        config.tempList is assigned an empty list;
+//        config.graphData is assigned an empty list
+function resetConfiguration() {
+  config.speciesList = [];
+  config.tempList = [];
+  config.graphData = [];
+}
+
+// Run the simulation, taking in user input and preparing data for output
+// Utilizes the function(s)... prepareWorkingList, growBacteria
+// Pre : none
+// Post : config.graphData (the list of data used to plot the line graphs) is
+//        properly populated with data JSON objects
+function runSimulation() {
+  resetConfiguration();
+
+  reflectUI();
+  
+  config.tempList.forEach( (temp) => {
+    numIntervals = 0;
+    gatherData(temp);
+  })
+
+  display();
+}
+
 /*** Simulation Variables ***/
 var numIntervals = 0;
-var workingList = [];
+  // amount of time according to config.timeInterval that has passed
+var workingList = [];   // list with species name and related information
+
+
+/*** Graph Variables ***/
+var highestY = 0;
+
+const speciesGroup = [   // species information : helps format data for graph
+  {
+    name: "eColi",
+    label: "Escherichia coli",
+    color: "red"
+  },
+  {
+    name: "mycobacteriumTuberculosis",
+    label: "Mycobacterium tuberculosis",
+    color: "orange"
+  },
+  {
+    name: "clostridiumTetanus",
+    label: "Clostridium tetanus",
+    color: "green"
+  },
+  {
+    name: "listeriaMonocytogenes",
+    label: "Listeria monocytogenes",
+    color: "blue"
+  },
+  {
+    name: "thermusAquaticus",
+    label: "Thermus aquaticus",
+    color: "purple"
+  }
+];
+
+const myColor = d3.scaleOrdinal()   // color scheme for line graphs
+  .domain(speciesGroup.map(function(d) { return d.label }))
+  .range(speciesGroup.map(function(d) { return d.color }));
+
+const margin = {top: 40, right: 50, bottom: 50, left: 100},
+  width = 1000 - margin.left - margin.right,
+  height = 600 - margin.top - margin.bottom;
