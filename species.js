@@ -1,6 +1,6 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : July 2nd, 2024
+// Last Update : July 2nd, 202
 
 /* Purpose : Define configuration JSON object (config),
              Define JSON object of bacteria species (species),
@@ -166,6 +166,7 @@ function prepareWorkingList(temp) {
         testNutrient: 0.40,   // can be set to variable respective inside species
     })
   }
+  console.log(workingList);     /********** PRINT - LEAVE OUT **********/
 
   let data0 = {};   // data JSON object holding information before growth
   data0.interval = numIntervals;
