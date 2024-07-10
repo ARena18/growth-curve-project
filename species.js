@@ -16,11 +16,19 @@
                   name of species to be displayed
    - tempList: list of numbers,
                temperatures of the environment the species grow in
+   - environment: string (char),
+                  the state of the environment related to oxygen
+                  ("o" - oxygen, "a" - anerobic, "n" - n/a [to debug])
+   - view: string,
+           the display type (linear, log2, log10, table, cross-section)
    - initialNumCells: number (integer),
                       the initial number (before growth) of cells
    - timeInterval: number (integer),
                    time interval in minutes the growth of each species is
-                   calculated (for display on line graph)
+                   calculated (implemented in hours)
+   - endTime: number (integer),
+              total time in minutes the growth of each species is displayed
+              (implemented in hours)
    - graphData: data on the number of each species' (listed in speciesList)
                 cells at each calculated time interval
                 (lower index, earlier time --> higher index, later time)
@@ -31,8 +39,8 @@ var config = {
     environment: "n",
     view: "",
     initialNumCells: 1,
-    timeInterval: (60 * 12),
-    endTime: (60 * 200),
+    timeInterval: (60 * 1),
+    endTime: (60 * 1),
     graphData: {},
 }
 // additional key-value pairs can be added
@@ -56,6 +64,12 @@ var config = {
                     "o" - oxygen; can only grow in environments with oxygen
                     "a" - anaerobic; can only grow in environments without oxygen
                     "b" - both; can grow in environments with or without oxygen
+   - hourInterval: number (integer),
+                   the time interval in hours growth data for the species should
+                   be calculated/stored at
+   - totalHours: number (integer),
+                 the total time in hours growth dat for the species is
+                 calculated/stored (and thus displayed)
 
 */
 const species = {
@@ -66,6 +80,8 @@ const species = {
     maxDivTime: 20,
     divSlowRate: 0.03,
     environment: "o",
+    hourInterval: 2,
+    totalHours: 40
   },
   mycobacteriumTuberculosis: {
     maxTemp: 55,
@@ -74,6 +90,8 @@ const species = {
     maxDivTime: (8 * 24 * 60),
     divSlowRate: 0.03,
     environment: "o",
+    hourInterval: 1000,
+    totalHours: 20000
   },
   clostridiumTetanus: {
     maxTemp: 55,
@@ -82,6 +100,8 @@ const species = {
     maxDivTime: 60,
     divSlowRate: 0.03,
     environment: "a",
+    hourInterval: 6,
+    totalHours: 120
   },
   listeriaMonocytogenes: {
     maxTemp: 55,
@@ -90,6 +110,8 @@ const species = {
     maxDivTime: 60,
     divSlowRate: 0.03,
     environment: "o",
+    hourInterval: 8,
+    totalHours: 220
   },
   thermusAquaticus: {
     maxTemp: 99,
@@ -98,6 +120,8 @@ const species = {
     maxDivTime: 40,
     divSlowRate: 0.03,
     environment: "o",
+    hourInterval: 6,
+    totalHours: 160
   }
 }
 /* Additional Notes for Team
@@ -115,7 +139,9 @@ const species = {
 // Pre : appropriate HTML elements are available
 // Post : config.speciesList has the species to be displayed for the simulation;
 //        config.tempList has the temperatures to be applied in the simulation;
-//        environment reflects the chosen condition ("o"-oxygen, "a"-anaerobic)
+//        config.environment reflects the chosen condition;
+//        config.timeInterval is assigned the appropriate interval,
+//        config.endTime is assigned the appropriate number of hours
 function reflectUI() {
   let num = 1;
   let bacteriaInput = document.getElementById(`bacteria${num}`);
@@ -138,7 +164,14 @@ function reflectUI() {
 
   let environmentInput = document.querySelector('input[name="oxy"]:checked');
   config.environment = environmentInput.value[0];
-    // can remove bracket notation once code updated
+
+  if(config.speciesList.length > 1) {
+    config.timeInterval = 60 * 3;
+    config.endTime = 60 * 100;
+  } else {
+    config.timeInterval = 60 * species[config.speciesList[0]].hourInterval;
+    config.endTime = 60 * species[config.speciesList[0]].totalHours;
+  }
 }
 
 // Generate objects which represent the state of each species in the simulation
@@ -166,7 +199,6 @@ function prepareWorkingList(temp) {
         testNutrient: 0.40,   // can be set to variable respective inside species
     })
   }
-  console.log(workingList);     /********** PRINT - LEAVE OUT **********/
 
   let data0 = {};   // data JSON object holding information before growth
   data0.interval = numIntervals;
@@ -207,47 +239,36 @@ function growBacteria(temp) {
     let newNumCells = workingList[i].numCells;
       // number of cells after growth (and/or death)
 
-    if(temp > species[speciesKey].maxTemp ||
-       temp < species[speciesKey].minTemp ||
-       !workingList[i].viable ||
-       workingList[i].testNutrient <= 0) {
-      
+    if(temp <= species[speciesKey].maxTemp &&
+       temp >= species[speciesKey].minTemp &&
+       workingList[i].viable) { 
       for(let j = 0; j < d; j++) {
-        workingList[i].divCount++;
-
-        if(workingList[i].divCount % 7 == 0) {
-          workingList[i].divCount = 0;
-          newNumCells = Math.floor(newNumCells * (1 - 0.65));
-        }
-      }
-    } else { 
-        for(let j = 0; j < d; j++) {
-        workingList[i].testNutrient = workingList[i].testNutrient - 0.01;
         if(workingList[i].testNutrient > 0) {
+          workingList[i].testNutrient = workingList[i].testNutrient - 0.01;
           newNumCells = Math.floor(newNumCells * 2);
-
-          if(workingList[i].testNutrient <= 0.2) {
-            workingList[i].divCount++;
-
-            if(workingList[i].divCount % 7 == 0) {
-              workingList[i].divCount = 0;
+        } else {
+          workingList[i].divCount = workingList[i].divCount + 1;
+  
+          if(workingList[i].divCount % 7 == 0) {
+            if(workingList[i].divCount > 50) {
+              newNumCells = Math.floor(newNumCells * (1 - 0.65));
+            } else if(workingList[i].divCount > 40) {
               newNumCells = Math.floor(newNumCells * (1 - 0.90));
+            } else if(workingList[i].divCount > 10) {
+              newNumCells = Math.floor(newNumCells * (1 - 0.10));
             }
           }
-
-          if(workingList[i].testNutrient <= 0.3) {
-            newNumCells = Math.floor(newNumCells * (1 - 0.10));
-          }
         }
       }
-
-      workingList[i].timeOverflow = Math.round(
-        (config.timeInterval + workingList[i].timeOverflow) % divTime
-      );
     }
+
+    workingList[i].timeOverflow = Math.round(
+      (config.timeInterval + workingList[i].timeOverflow) % divTime
+    );
 
     workingList[i].numCells = newNumCells;
     data[speciesKey] = newNumCells;
+
     if(newNumCells > highestY) {
       highestY = newNumCells;
     }
@@ -266,7 +287,7 @@ function growBacteria(temp) {
 */
 
 // Gathers data on the growth of select species at temp (parameter)
-// Utilizes the function(s)... growBacteria
+// Utilizes the function(s)... prepareWorkingList, growBacteria
 // Pre : temp is a number (integer) variable representing the given temperature
 // Post : data JSON objects are pushed/appended to config.graphData[`@${temp}`]
 function gatherData(temp) {
@@ -422,14 +443,14 @@ function addGraph(temp, data) {
     .append("path")
       .attr("class", function(d) { return d.name })
       .attr("d", function(d) { return line(d.values) })
-      .attr("stroke", function(d) { return myColor(d.name) })
+      .attr("stroke", function(d) { return d.color })
       .style("stroke-width", 2)
       .style("fill", "none");
   svg.selectAll("myDots")   // adding the points
     .data(data)
     .enter()
       .append("g")
-      .style("fill", function(d) { return myColor(d.name) })
+      .style("fill", function(d) { return d.color })
       .attr("class", function(d) { return d.name })
     .selectAll("myPoints")
     .data(function(d) { return d.values })
@@ -442,7 +463,7 @@ function addGraph(temp, data) {
         .attr("x", width - 200)
         .attr("y", function(d, i) { return i * 40 })
         .text(function(d) { return d.label })
-        .style("fill", function(d) { return myColor(d.name) })
+        .style("fill", function(d) { return d.color })
         .style("font-size", 15)
       .on("click", function(d) {
         let currentOpacity = d3.selectAll("." + d.name).style("opacity");
@@ -509,14 +530,14 @@ function addLog2Graph(temp, data) {
     .append("path")
       .attr("class", function(d) { return d.name })
       .attr("d", function(d) { return line(d.values) })
-      .attr("stroke", function(d) { return myColor(d.name) })
+      .attr("stroke", function(d) { return d.color })
       .style("stroke-width", 2)
       .style("fill", "none");
   svg.selectAll("myDots")   // adding the points
     .data(data)
     .enter()
       .append("g")
-      .style("fill", function(d) { return myColor(d.name) })
+      .style("fill", function(d) { return d.color })
       .attr("class", function(d) { return d.name })
     .selectAll("myPoints")
     .data(function(d) { return d.values })
@@ -529,7 +550,7 @@ function addLog2Graph(temp, data) {
         .attr("x", width - 200)
         .attr("y", function(d, i) { return i * 40 })
         .text(function(d) { return d.label })
-        .style("fill", function(d) { return myColor(d.name) })
+        .style("fill", function(d) { return d.color })
         .style("font-size", 15)
       .on("click", function(d) {
         let currentOpacity = d3.selectAll("." + d.name).style("opacity");
@@ -595,14 +616,14 @@ function addLog10Graph(temp, data) {
     .append("path")
       .attr("class", function(d) { return d.name })
       .attr("d", function(d) { return line(d.values) })
-      .attr("stroke", function(d) { return myColor(d.name) })
+      .attr("stroke", function(d) { return d.color })
       .style("stroke-width", 2)
       .style("fill", "none");
   svg.selectAll("myDots")   // adding the points
     .data(data)
     .enter()
       .append("g")
-      .style("fill", function(d) { return myColor(d.name) })
+      .style("fill", function(d) { return d.color })
       .attr("class", function(d) { return d.name })
     .selectAll("myPoints")
     .data(function(d) { return d.values })
@@ -615,7 +636,7 @@ function addLog10Graph(temp, data) {
         .attr("x", width - 200)
         .attr("y", function(d, i) { return i * 40 })
         .text(function(d) { return d.label })
-        .style("fill", function(d) { return myColor(d.name) })
+        .style("fill", function(d) { return d.color })
         .style("font-size", 15)
       .on("click", function(d) {
         let currentOpacity = d3.selectAll("." + d.name).style("opacity");
@@ -654,6 +675,8 @@ function runSimulation() {
   
   config.tempList.forEach( (temp) => {
     numIntervals = 0;
+    highestY = 0;
+    
     gatherData(temp);
   })
 
@@ -697,10 +720,6 @@ const speciesGroup = [   // species information : helps format data for graph
   }
 ];
 
-const myColor = d3.scaleOrdinal()   // color scheme for line graphs
-  .domain(speciesGroup.map(function(d) { return d.label }))
-  .range(speciesGroup.map(function(d) { return d.color }));
-
-const margin = {top: 40, right: 50, bottom: 50, left: 100},
-  width = 1000 - margin.left - margin.right,
+const margin = {top: 40, right: 50, bottom: 50, left: 120},
+  width = 620 - margin.left - margin.right,
   height = 600 - margin.top - margin.bottom;
