@@ -1,14 +1,17 @@
 /*
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   CSS File : style.css
-  Purpose : Define the main page of the Growth Curve Simulation
-  Last Update : July 1st, 2024
+  Last Update : July 2nd, 2024
+
+  Purpose : Define the styling of the Growth Curve Simulation's main page
 */
 
 * { /* background */
     font-family: Calibri;
-    background-color: rgb(132, 163, 255);
     font-size: 110%;
+}
+body {
+  background-color: rgb(132, 163, 255);
 }
 .topbox{ /* title box */
     display: flex;
@@ -224,4 +227,26 @@ input[type="radio"]{
     bottom: 150%;
     left: 50%;
     margin-left: -205px; 
+}
+
+div#displayContainer { /* display box styling */
+    background-color: white;
+    font-size: x-small;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+table { /* table */
+    text-align: center;
+    margin: 10px;
+}
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+th:not(:first-child) {
+    font-style: italic;
 }

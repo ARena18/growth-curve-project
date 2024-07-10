@@ -1,9 +1,8 @@
-/*
-  Authors : Rena Ahn, Gina Philipose, Zachary Mullen
-  JavaScript File : script.js
-  Purpose : Define the main page of the Growth Curve Simulation
-  Last Update : July 1st, 2024
-*/
+// Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+// Javascript File : script.js
+// Last Update : July 2nd, 2024
+
+// Purpose : Define the functionality of the user input form
 
 const viewMenu = document.getElementById("view"); // view select menu
 const container = document.getElementById("menuContainer"); // bacteria menus get added here
@@ -168,8 +167,8 @@ bacteria.addEventListener("click", function() {
         option4.value = "clostridiumTetanus";
         option5.textContent = "Listeria Monocytogenes";
         option5.value = "listeriaMonocytogenes";
-        option6.textContent = "Thermus Acquaticus";
-        option6.value = "thermusAcquaticus";
+        option6.textContent = "Thermus Aquaticus";
+        option6.value = "thermusAquaticus";
 
         newInput.appendChild(option1);
         newInput.appendChild(option2);
