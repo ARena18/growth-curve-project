@@ -81,7 +81,7 @@ const species = {
     divSlowRate: 0.03,
     environment: "o",
     hourInterval: 2,
-    totalHours: 40
+    totalHours: 80
   },
   mycobacteriumTuberculosis: {
     maxTemp: 55,
@@ -91,7 +91,7 @@ const species = {
     divSlowRate: 0.03,
     environment: "o",
     hourInterval: 1000,
-    totalHours: 20000
+    totalHours: 25000
   },
   clostridiumTetanus: {
     maxTemp: 55,
@@ -101,7 +101,7 @@ const species = {
     divSlowRate: 0.03,
     environment: "a",
     hourInterval: 6,
-    totalHours: 120
+    totalHours: 200
   },
   listeriaMonocytogenes: {
     maxTemp: 55,
@@ -111,7 +111,7 @@ const species = {
     divSlowRate: 0.03,
     environment: "o",
     hourInterval: 8,
-    totalHours: 220
+    totalHours: 260
   },
   thermusAquaticus: {
     maxTemp: 99,
@@ -121,7 +121,7 @@ const species = {
     divSlowRate: 0.03,
     environment: "o",
     hourInterval: 6,
-    totalHours: 160
+    totalHours: 200
   }
 }
 /* Additional Notes for Team
