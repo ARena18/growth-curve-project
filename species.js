@@ -1,6 +1,6 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : July 2nd, 202
+// Last Update : July 10th, 2024
 
 /* Purpose : Define configuration JSON object (config),
              Define JSON object of bacteria species (species),
@@ -337,12 +337,12 @@ function display() {
 // Post : a table is added to 'displayContainer' (HTML div element)
 function addTable(temp) {
   let article = document.createElement("article");
-  let h2 = document.createElement("h2");
+  let p = document.createElement("p");
   let title = document.createTextNode(
     `Data @ ${temp}°C`
   );
-  h2.appendChild(title);
-  article.appendChild(h2);
+  p.appendChild(title);
+  article.appendChild(p);
 
   let table = document.createElement("table");   // table element
   let tHead = table.createTHead();               // thead element
