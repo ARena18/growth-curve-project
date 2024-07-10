@@ -1,17 +1,17 @@
 /*
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   CSS File : style.css
-  Last Update : July 2nd, 2024
+  Last Update : July 10th, 2024
 
   Purpose : Define the styling of the Growth Curve Simulation's main page
 */
 
 * { /* background */
     font-family: Calibri;
-    font-size: 110%;
 }
 body {
-  background-color: rgb(132, 163, 255);
+    background-color: rgb(132, 163, 255);
+    font-size: x-large;
 }
 .topbox{ /* title box */
     display: flex;
@@ -32,6 +32,19 @@ h1{ /* title text */
     margin-bottom: 10px;
 }
 
+#form1 {
+    text-align: center;
+    padding: 15px;
+}
+#form1 > div:first-child {
+    text-align: left;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
 .view {
     margin-top: -10px;
 }
@@ -39,6 +52,7 @@ h1{ /* title text */
 /* select menus */
 select{
     cursor: pointer;
+    font-size: 75%;
 }
 
 /* color key */
@@ -74,7 +88,7 @@ select{
 }
 
 /* buttons */
-button, select{
+button {
     background-color: white;
     font-size: 75%;
 }
@@ -97,6 +111,7 @@ button:hover{
 }
 input[type="range"]{
     -webkit-appearance: none;
+    appearance: none;
     background-color: rgb(223, 223, 223);
     width: 400px;
     border-radius: 5px;
@@ -231,7 +246,7 @@ input[type="radio"]{
 
 div#displayContainer { /* display box styling */
     background-color: white;
-    font-size: x-small;
+    font-size: medium;
 
     display: flex;
     flex-direction: row;
