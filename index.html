@@ -19,27 +19,102 @@
     <script src="https://d3js.org/d3.v4.js"></script>
   </head>
 
-  <body>
+    <body>
     <div class="topbox">
       <h1>Bacterial Growth and Temperature Simulation </h1>
     </div>
-    
-      <!--Select View-->
-        <br>
-        <form id="form1">
-          <div class="view">
-            <label for="view">Select View:
-            <select id="view">
-              <option value="linear">Linear</option>
-              <option value="log2">log_2</option>
-              <option value="log10">log_10</option>
-              <option value="table">Table</option> 
-              <option value="cross-section">Cross-Section</option>
-            </select>
-            </label>
-          </div>
+    <br>
+    <!--Purpose/Information Section-->
+    <!--General Information-->
+    <p>The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.</p>
+    <p>Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
+    psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
+    temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
+    through four phases:</p>
+
+    <!--Phase Information-->
+    <i>
+      <div class="moreInfo">
+
+        <!--Lag Phase-->
+        <div class="toolTip1">
+          lag phase,
+          <span class="text1">
+            When bacteria is introduced to a new medium, the bacterial population needs to adapt to the new environment; instead of immediately 
+            going through cell division, bacteria take time to create enzymes that are necessary for cell division and population growth in this
+            environment.
+          </span>
+        </div>
+        
+        <!--Exponential Phase-->
+        <div class="toolTip2">
+          exponential phase,
+          <span class="text2">
+            After the population has adapted to the environment, the cell population increases exponentially until all resources and nutrients 
+            have run out.
+          </span>
+        </div>
+  
+        <!--Stationary Phase-->
+        <div class="toolTip3">
+          stationary phase,
+          <span class="text3">
+            Once all nutrients have been used up, the population stays constant as some cells die and others continue to divide. The length of 
+            the stationary phase may depend on species and medium as some bacteria can remain viable for long periods of time even when starved 
+            of nutrients.
+          </span>
+        </div>
+        
+        <!--Death Phase-->
+        <div class="toolTip4">
+          death phase,
+          <span class="text4">
+            An extended period where the bacteria present continue to gradually decrease in number.
+          </span>
+        </div> and
+        
+        <!--Phase of Prolonged Decline-->
+        <div class="toolTip5">
+          phase of prolonged decline.
+          <span class="text5">
+            Death phase is characterized by an exponential decrease in the number of living cells. During this time, cells die at a greater rate 
+            than they are dividing.
+          </span>
+        </div>
+      </div>
+    </i>
+    <br>
+
+    <form id="form1">
+      <div>
+      <div>
+        <!--Select View-->
+        <div class="view">
+          <label for="view">Select View:
+          <select id="view">
+            <option value="linear">Linear</option>
+            <option value="log2">log_2</option>
+            <option value="log10">log_10</option>
+            <option value="table">Table</option>
+            <option value="cross-section">Cross-Section</option>
+          </select>
+          </label>
+        </div>
         <br>
 
+        <!--Radio Bubbles-->
+        <div class="radioContainer">
+          <label for="bubble1">
+            <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
+          </label>
+          <br>
+          <label for="bubble2">
+            <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
+          </label>
+        </div>
+      </div>
+
+      <div>
         <!--Select Bacteria(First Menu)-->
         <div class="bacteria1">
           <label for="bacteria1"> Select Bacteria:
@@ -63,8 +138,9 @@
           <button id="addBacteria" type="button"> Add Bacteria </button>
           <button id="removeBacteria" type="button"> Remove Bacteria</button>
         </div>
-        <br>
+      </div>
 
+      <div>
         <!--Select Temperature(First Slider and Input Box)-->
         <label class="range1" for="slider1">Select Temperature (Celsius)
           <br>
@@ -86,84 +162,13 @@
           <button id="addTemp" type="button"> Add Temperature </button>
           <button id="removeTemp" type="button"> Remove Temperature</button>
         </div>
-        <br>
-        
-        <!--Radio Bubbles-->
-        <div class="radioContainer">
-          <label for="bubble1">
-            <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
-          </label>
-          <br>
-          <label for="bubble2">
-            <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
-          </label>
-        </div>
-        <br>
+      </div>
+      </div>
 
-        <!--Overall Submission Button-->
-        <button id="submitButton" type="submit" onclick="runSimulation()"> Run Simulation</button>
-      </form>
-      <br>
-
-      <!--Purpose/Information Section-->
-      <!--General Information-->
-      <p>The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.</p>
-      <p>Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
-      psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
-      temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
-      through four phases:</p>
-
-      <!--Phase Information-->
-      <i>
-        <div class="moreInfo">
-
-          <!--Lag Phase-->
-          <div class="toolTip1">
-            lag phase,
-            <span class="text1">
-              When bacteria is introduced to a new medium, the bacterial population needs to adapt to the new environment; instead of immediately 
-              going through cell division, bacteria take time to create enzymes that are necessary for cell division and population growth in this
-              environment.
-            </span>
-          </div>
-          
-          <!--Exponential Phase-->
-          <div class="toolTip2">
-            exponential phase,
-            <span class="text2">
-              After the population has adapted to the environment, the cell population increases exponentially until all resources and nutrients 
-              have run out.
-            </span>
-          </div>
-    
-          <!--Stationary Phase-->
-          <div class="toolTip3">
-            stationary phase,
-            <span class="text3">
-              Once all nutrients have been used up, the population stays constant as some cells die and others continue to divide. The length of 
-              the stationary phase may depend on species and medium as some bacteria can remain viable for long periods of time even when starved 
-              of nutrients.
-            </span>
-          </div>
-          
-          <!--Death Phase-->
-          <div class="toolTip4">
-            death phase,
-            <span class="text4">
-              An extended period where the bacteria present continue to gradually decrease in number.
-            </span>
-          </div> and
-          
-          <!--Phase of Prolonged Decline-->
-          <div class="toolTip5">
-            phase of prolonged decline.
-            <span class="text5">
-              Death phase is characterized by an exponential decrease in the number of living cells. During this time, cells die at a greater rate 
-              than they are dividing.
-            </span>
-          </div>
-        </div>
-      </i>
+      <!--Overall Submission Button-->
+      <button id="submitButton" type="submit" onclick="runSimulation()"> Run Simulation</button>
+    </form>
+    <br>
 
       <!--Display Area/Box-->
       <div id="displayContainer">
