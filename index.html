@@ -4,7 +4,7 @@
 <!-- 
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   HTML File : index.html
-  Last Update : July 10th, 2024
+  Last Update : July 17th, 2024
   
   Purpose : Define the main page of the Growth Curve Simulation
 -->
@@ -25,64 +25,71 @@
     </div>
     <br>
     <!--Purpose/Information Section-->
-    <!--General Information-->
-    <p>The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.</p>
-    <p>Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
-    psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
-    temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
-    through four phases:</p>
+    <div id="infobox">
+      <!--General Information-->
+      <div>
+        <p>The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.<br>
+          Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
+          psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
+          temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
+          through four phases:</p>
 
-    <!--Phase Information-->
-    <i>
-      <div class="moreInfo">
+        <!--Phase Information-->
+        <i>
+          <div class="moreInfo">
 
-        <!--Lag Phase-->
-        <div class="toolTip1">
-          lag phase,
-          <span class="text1">
-            When bacteria is introduced to a new medium, the bacterial population needs to adapt to the new environment; instead of immediately 
-            going through cell division, bacteria take time to create enzymes that are necessary for cell division and population growth in this
-            environment.
-          </span>
-        </div>
-        
-        <!--Exponential Phase-->
-        <div class="toolTip2">
-          exponential phase,
-          <span class="text2">
-            After the population has adapted to the environment, the cell population increases exponentially until all resources and nutrients 
-            have run out.
-          </span>
-        </div>
-  
-        <!--Stationary Phase-->
-        <div class="toolTip3">
-          stationary phase,
-          <span class="text3">
-            Once all nutrients have been used up, the population stays constant as some cells die and others continue to divide. The length of 
-            the stationary phase may depend on species and medium as some bacteria can remain viable for long periods of time even when starved 
-            of nutrients.
-          </span>
-        </div>
-        
-        <!--Death Phase-->
-        <div class="toolTip4">
-          death phase,
-          <span class="text4">
-            An extended period where the bacteria present continue to gradually decrease in number.
-          </span>
-        </div> and
-        
-        <!--Phase of Prolonged Decline-->
-        <div class="toolTip5">
-          phase of prolonged decline.
-          <span class="text5">
-            Death phase is characterized by an exponential decrease in the number of living cells. During this time, cells die at a greater rate 
-            than they are dividing.
-          </span>
-        </div>
+            <!--Lag Phase-->
+            <div class="toolTip1">
+              lag phase,
+              <span class="text1">
+                When bacteria is introduced to a new medium, the bacterial population needs to adapt to the new environment; instead of immediately 
+                going through cell division, bacteria take time to create enzymes that are necessary for cell division and population growth in this
+                environment.
+              </span>
+            </div>
+            
+            <!--Exponential Phase-->
+            <div class="toolTip2">
+              exponential phase,
+              <span class="text2">
+                After the population has adapted to the environment, the cell population increases exponentially until all resources and nutrients 
+                have run out.
+              </span>
+            </div>
+      
+            <!--Stationary Phase-->
+            <div class="toolTip3">
+              stationary phase,
+              <span class="text3">
+                Once all nutrients have been used up, the population stays constant as some cells die and others continue to divide. The length of 
+                the stationary phase may depend on species and medium as some bacteria can remain viable for long periods of time even when starved 
+                of nutrients.
+              </span>
+            </div>
+            
+            <!--Death Phase-->
+            <div class="toolTip4">
+              death phase,
+              <span class="text4">
+                An extended period where the bacteria present continue to gradually decrease in number.
+              </span>
+            </div> and
+            
+            <!--Phase of Prolonged Decline-->
+            <div class="toolTip5">
+              phase of prolonged decline.
+              <span class="text5">
+                Death phase is characterized by an exponential decrease in the number of living cells. During this time, cells die at a greater rate 
+                than they are dividing.
+              </span>
+            </div>
+          </div>
+        </i>
       </div>
-    </i>
+      <img id="binaryFissionImg"
+            src="https://everyone.plos.org/wp-content/uploads/sites/5/legacy-featured-images/Staphylococcus_aureus_VISA_21-16x9.jpg"
+            alt="bacterial cell undergoing binary fission">
+    </div>
     <br>
 
     <form id="form1">

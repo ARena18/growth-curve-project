@@ -1,6 +1,6 @@
 // Authors : Rena Ahn, Gina Philipose, Zachary Mullen
 // JavaScript File : species.js
-// Last Update : July 10th, 2024
+// Last Update : July 17th, 2024
 
 /* Purpose : Define configuration JSON object (config),
              Define JSON object of bacteria species (species),
@@ -11,6 +11,7 @@
              Define the main function which runs the simulation (runSimulation),
 */
 
+/* Simulation Constants */
 /* Description of Configuration Object...
    - speciesList: list of strings,
                   name of species to be displayed
@@ -135,6 +136,54 @@ const species = {
      therefore the objects are constants
 */
 
+// initial amount of nutrient given to each species, controls total growth
+const startNutrient = 0.2;
+
+// stores the number of divisions necessary before entering each phase
+// index 0: stationary phase, index 1: death phase, index 2: phase of prolonged decline
+const phaseMarkers = [10, 40, 50];
+
+/*** Simulation Variables ***/
+var numIntervals = 0;
+  // amount of time according to config.timeInterval that has passed
+var workingList = [];   // list with species name and related information
+
+
+/*** Graph Variables ***/
+var highestY = 0;
+
+const speciesGroup = [   // species information : helps format data for graph
+  {
+    name: "eColi",
+    label: "Escherichia coli",
+    color: "red"
+  },
+  {
+    name: "mycobacteriumTuberculosis",
+    label: "Mycobacterium tuberculosis",
+    color: "orange"
+  },
+  {
+    name: "clostridiumTetanus",
+    label: "Clostridium tetanus",
+    color: "green"
+  },
+  {
+    name: "listeriaMonocytogenes",
+    label: "Listeria monocytogenes",
+    color: "blue"
+  },
+  {
+    name: "thermusAquaticus",
+    label: "Thermus aquaticus",
+    color: "purple"
+  }
+];
+
+const margin = {top: 40, right: 50, bottom: 50, left: 120},
+  width = 620 - margin.left - margin.right,
+  height = 600 - margin.top - margin.bottom;
+
 // Reflect user input onto config JSON object
 // Pre : appropriate HTML elements are available
 // Post : config.speciesList has the species to be displayed for the simulation;
@@ -147,6 +196,7 @@ function reflectUI() {
   let bacteriaInput = document.getElementById(`bacteria${num}`);
   while(bacteriaInput) {
     if(bacteriaInput.value == "NULL") { break; }
+    if(config.speciesList.indexOf(bacteriaInput.value) >= 0) { break; }
 
     config.speciesList.push(bacteriaInput.value);
     num++;
@@ -156,8 +206,12 @@ function reflectUI() {
   num = 1;
   let tempInput = document.getElementById(`slider${num}`);
   while(tempInput) {
-    config.tempList.push(parseInt(tempInput.value));
-    config.graphData[`@${tempInput.value}`] = [];
+    let temp = parseInt(tempInput.value);
+    if(isNaN(temp)) { break; }
+    if(config.tempList.indexOf(temp) >= 0) { break; }
+
+    config.tempList.push(parseInt(temp));
+    config.graphData[`@${temp}`] = [];
     num++;
     tempInput = document.getElementById(`slider${num}`);
   }
@@ -196,7 +250,7 @@ function prepareWorkingList(temp) {
         timeOverflow: 0,
         divCount: 0,
         numCells: config.initialNumCells,
-        testNutrient: 0.40,   // can be set to variable respective inside species
+        nutrientAmount: startNutrient,   // can be set to variable respective inside species
     })
   }
 
@@ -243,18 +297,18 @@ function growBacteria(temp) {
        temp >= species[speciesKey].minTemp &&
        workingList[i].viable) { 
       for(let j = 0; j < d; j++) {
-        if(workingList[i].testNutrient > 0) {
-          workingList[i].testNutrient = workingList[i].testNutrient - 0.01;
+        if(workingList[i].nutrientAmount > 0) {
+          workingList[i].nutrientAmount = workingList[i].nutrientAmount - 0.01;
           newNumCells = Math.floor(newNumCells * 2);
         } else {
           workingList[i].divCount = workingList[i].divCount + 1;
   
           if(workingList[i].divCount % 7 == 0) {
-            if(workingList[i].divCount > 50) {
+            if(workingList[i].divCount > phaseMarkers[2]) {
               newNumCells = Math.floor(newNumCells * (1 - 0.65));
-            } else if(workingList[i].divCount > 40) {
+            } else if(workingList[i].divCount > phaseMarkers[1]) {
               newNumCells = Math.floor(newNumCells * (1 - 0.90));
-            } else if(workingList[i].divCount > 10) {
+            } else if(workingList[i].divCount > phaseMarkers[0]) {
               newNumCells = Math.floor(newNumCells * (1 - 0.10));
             }
           }
@@ -682,44 +736,3 @@ function runSimulation() {
 
   display();
 }
-
-/*** Simulation Variables ***/
-var numIntervals = 0;
-  // amount of time according to config.timeInterval that has passed
-var workingList = [];   // list with species name and related information
-
-
-/*** Graph Variables ***/
-var highestY = 0;
-
-const speciesGroup = [   // species information : helps format data for graph
-  {
-    name: "eColi",
-    label: "Escherichia coli",
-    color: "red"
-  },
-  {
-    name: "mycobacteriumTuberculosis",
-    label: "Mycobacterium tuberculosis",
-    color: "orange"
-  },
-  {
-    name: "clostridiumTetanus",
-    label: "Clostridium tetanus",
-    color: "green"
-  },
-  {
-    name: "listeriaMonocytogenes",
-    label: "Listeria monocytogenes",
-    color: "blue"
-  },
-  {
-    name: "thermusAquaticus",
-    label: "Thermus aquaticus",
-    color: "purple"
-  }
-];
-
-const margin = {top: 40, right: 50, bottom: 50, left: 120},
-  width = 620 - margin.left - margin.right,
-  height = 600 - margin.top - margin.bottom;
