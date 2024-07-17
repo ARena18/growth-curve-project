@@ -1,7 +1,7 @@
 /*
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   CSS File : style.css
-  Last Update : July 10th, 2024
+  Last Update : July 17th, 2024
 
   Purpose : Define the styling of the Growth Curve Simulation's main page
 */
@@ -160,10 +160,23 @@ input[type="radio"]{
 }
 
 /* Additional Information Section */
-/* General Information Text */
+/* General Information Box */
+#infobox {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    gap: 10px;
+}
+/* General Information Content */
 .moreInfo {
     font-size: 17px;
-  }
+}
+#binaryFissionImg {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+}
 
 /* Phases */
 .toolTip1, .toolTip2, .toolTip3, .toolTip4, .toolTip5 {
