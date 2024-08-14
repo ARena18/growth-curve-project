@@ -1,6 +1,6 @@
-// Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+// Authors : Rena Ahn, Gina Philipose
 // JavaScript File : species.js
-// Last Update : July 17th, 2024
+// Last Update : July 31th, 2024
 
 /* Purpose : Define configuration JSON object (config),
              Define JSON object of bacteria species (species),
@@ -137,7 +137,10 @@ const species = {
 */
 
 // initial amount of nutrient given to each species, controls total growth
-const startNutrient = 0.2;
+const startNutrient = 0.20;
+
+// max round of doublings a species can experience, controls individual growth
+const maxGrowthRounds = 2;
 
 // stores the number of divisions necessary before entering each phase
 // index 0: stationary phase, index 1: death phase, index 2: phase of prolonged decline
@@ -149,7 +152,7 @@ var numIntervals = 0;
 var workingList = [];   // list with species name and related information
 
 
-/*** Graph Variables ***/
+/*** Graph Variables and Functions***/
 var highestY = 0;
 
 const speciesGroup = [   // species information : helps format data for graph
@@ -194,18 +197,19 @@ const margin = {top: 40, right: 50, bottom: 50, left: 120},
 function reflectUI() {
   let num = 1;
   let bacteriaInput = document.getElementById(`bacteria${num}`);
-  while(bacteriaInput) {
-    if(bacteriaInput.value == "NULL") { break; }
-    if(config.speciesList.indexOf(bacteriaInput.value) >= 0) { break; }
-
-    config.speciesList.push(bacteriaInput.value);
+  while(bacteriaInput) {   // updating config.speciesList
+    if(bacteriaInput.value != "NULL"
+       && config.speciesList.indexOf(bacteriaInput.value) >= 0) {
+      config.speciesList.push(bacteriaInput.value);
+    }
+    
     num++;
     bacteriaInput = document.getElementById(`bacteria${num}`);
   }
 
   num = 1;
   let tempInput = document.getElementById(`slider${num}`);
-  while(tempInput) {
+  while(tempInput) {   // updating config.tempList
     let temp = parseInt(tempInput.value);
     if(isNaN(temp)) { break; }
     if(config.tempList.indexOf(temp) >= 0) { break; }
@@ -215,6 +219,18 @@ function reflectUI() {
     num++;
     tempInput = document.getElementById(`slider${num}`);
   }
+
+  let environmentInput = document.querySelector('input[name="oxy"]:checked');
+  config.environment = environmentInput.value[0];   // updating config.environment
+
+  if(config.speciesList.length > 1) {   // updating config.timeInterval and config.endTime
+    config.timeInterval = 60 * 3;
+    config.endTime = 60 * 100;
+  } else {
+    config.timeInterval = 60 * species[config.speciesList[0]].hourInterval;
+    config.endTime = 60 * species[config.speciesList[0]].totalHours;
+  }
+}
 
   let environmentInput = document.querySelector('input[name="oxy"]:checked');
   config.environment = environmentInput.value[0];
@@ -250,7 +266,8 @@ function prepareWorkingList(temp) {
         timeOverflow: 0,
         divCount: 0,
         numCells: config.initialNumCells,
-        nutrientAmount: startNutrient,   // can be set to variable respective inside species
+        nutrientAmount: startNutrient,
+        growthCount: 0,
     })
   }
 
@@ -287,7 +304,7 @@ function growBacteria(temp) {
         Math.abs(species[speciesKey].maxDivTemp - temp)
       )
     ));
-    let d = Math.floor(
+    let d = Math.round(
       (config.timeInterval + workingList[i].timeOverflow) / divTime
     );   // number of doublings in time interval
     let newNumCells = workingList[i].numCells;
@@ -299,7 +316,7 @@ function growBacteria(temp) {
       for(let j = 0; j < d; j++) {
         if(workingList[i].nutrientAmount > 0) {
           workingList[i].nutrientAmount = workingList[i].nutrientAmount - 0.01;
-          newNumCells = Math.floor(newNumCells * 2);
+          newNumCells = newNumCells * 2;
         } else {
           workingList[i].divCount = workingList[i].divCount + 1;
   
@@ -359,12 +376,12 @@ function gatherData(temp) {
 //        HTML elements which display growth data are added
 function display() {
   // clear container based on previous view
-  if(config.view == "table") {
+  if(config.view == "table") {   // clear table elements
     let container = document.getElementById("displayContainer");
     while(container.hasChildNodes()) {
       container.removeChild(container.firstChild);
     }
-  } else {   // line graphs
+  } else {   // clear line graphs
     d3.selectAll("svg").remove();
   }
 
@@ -372,66 +389,91 @@ function display() {
   let viewInput = document.getElementById("view");
   config.view = viewInput.value;
 
-  config.tempList.forEach( (temp) => {
-    if(config.view == "table") {
-      addTable(temp);
-    } else if(config.view == "cross-section") {
-      // cross section function
-    } else {
-      // formatting/organizing data for graphs
-      let displaySpecies = speciesGroup.filter( (species) => config.speciesList.indexOf(species.name) >= 0);
-      
-      let data = displaySpecies.map(function(group) {
-        return {
-          name: group.name,
-          label: group.label,
-          color: group.color,
-          values: config.graphData[`@${temp}`].map(function(d) {
-            return {
-              time: (config.timeInterval * d.interval) / 60,
-              value: d[group.name]
-            }
-          })
-        }
-      })
-
-      // adding appropriate graph
-      if(config.view == "linear") {
-        addGraph(temp, data);
-      } else if(config.view == "log2") {
-        addLog2Graph(temp, data);
+  if(config.view == "table") {
+    let tBody = buildTable();
+    // populating data rows
+    for(let i = 0; i < config.graphData[`@${config.tempList[0]}`].length; i++) {
+      let newRow = tBody.insertRow(); // data row (tr element with td elements)
+      newRow.insertCell().textContent = `${i * (config.timeInterval / 60)}`;
+      if(config.speciesList.length > 1) {
+        let mainTemp = config.tempList[0]
+        config.speciesList.forEach( (species) => {
+          newRow.insertCell().textContent =
+            `${Math.round(config.graphData[`@${mainTemp}`][i][species])}`;
+        })
       } else {
-        addLog10Graph(temp, data);
+        let mainSpecies = config.speciesList[0]
+        config.tempList.forEach( (temp) => {
+          newRow.insertCell().textContent =
+            `${Math.round(config.graphData[`@${temp}`][i][mainSpecies])}`;
+        })
       }
     }
-  })
+  } else if(config.view == "cross-section") {
+    // cross section function
+  } else {
+    // adding appropriate graph
+    if(config.view == "linear") {
+      addGraph();
+    } else if(config.view == "log2") {
+      addLog2Graph();
+    } else {
+      addLog10Graph();
+    }
+  }
 }
 
-// Adds a table (hour intervals) using growth data stored in config.graphData
-// Pre : temp is a number (integer) variable representing the given temperature
-// Post : a table is added to 'displayContainer' (HTML div element)
-function addTable(temp) {
-  let article = document.createElement("article");
-  let p = document.createElement("p");
-  let title = document.createTextNode(
-    `Data @ ${temp}°C`
-  );
-  p.appendChild(title);
+// Prepares/Organizes data necessary for tables
+// Returns a JSON with the appropriate title, list of column names, and data
+// list to be iterated depending on the number of species or temperatures chosen
+// Pre : none
+// Post : none
+function prepareTableData() {
+  if(config.speciesList.length > 1) {
+    let columnNames = ["Time (Hours)"];
+    speciesGroup.forEach( (species) => {
+      if(config.speciesList.indexOf(species.name) >= 0) {
+        columnNames.push(species.label);
+      }
+    })
+    return {
+      title: "Growth Data at " + config.tempList[0] + "°C",
+      headerColumns: columnNames
+    }
+  }
+
+  let columnNames = ["Time (Hours)"];
+  config.tempList.forEach( (temp) => {
+    columnNames.push(temp + "° Celsius");
+  })
+  let speciesLabel = speciesGroup.filter(
+    (species) => species.name == config.speciesList[0]
+  )[0].label;
+  return {
+    title: "Growth Data for " + speciesLabel,
+    headerColumns: columnNames
+  }
+}
+
+// Builds the basic structure necessary for a table
+// Returns the tBody element built
+// Utilizes Function(s)...prepareTableData
+// Pre : none
+// Post : none
+function buildTable() {
+  let { title, headerColumns } = prepareTableData();
+  let article = document.createElement("article"); // title and table container
+  let p = document.createElement("p");        // element for title
+  let label = document.createTextNode(title); // p element's content/text
+  p.appendChild(label);
   article.appendChild(p);
 
-  let table = document.createElement("table");   // table element
-  let tHead = table.createTHead();               // thead element
-  let headRow = tHead.insertRow();               // header row (tr element)
-
-  let headerColumns = ["Time (Hours)"];          // columns to display
-  speciesGroup.forEach( (species) => {
-    if(config.speciesList.indexOf(species.name) >= 0) {
-      headerColumns.push(species.label);
-    }
-  })
+  let table = document.createElement("table"); // table element
+  let tHead = table.createTHead();             // table head element
+  let headRow = tHead.insertRow();             // header row (tr element)
 
   headerColumns.forEach( (column) => {     // populating header row
-    let th = document.createElement("th");       // Data Column (th element)
+    let th = document.createElement("th"); // data column (th element)
     let text = document.createTextNode(column);
     th.appendChild(text);
     headRow.appendChild(th);
@@ -439,24 +481,72 @@ function addTable(temp) {
   tHead.appendChild(headRow);
   table.appendChild(tHead);
 
-  let tBody = table.createTBody();
-  for(let i = 0; i < config.graphData[`@${temp}`].length; i++) {   // populating data rows
-    let newRow = tBody.insertRow();
-    newRow.insertCell().textContent = `${i * (config.timeInterval / 60)}`;
-    config.speciesList.forEach( (species) => {
-      newRow.insertCell().textContent = `${config.graphData[`@${temp}`][i][species]}`;
-    })
-  }
+  let tBody = table.createTBody(); // table body element
 
-  let container = document.getElementById("displayContainer");
+  let container = document.getElementById("displayContainer");   // html container
   article.appendChild(table);
   container.appendChild(article);
+
+  return tBody;
+}
+
+// Formats and organizes data necessary for graphs
+// Returns a JSON with the appropriate title and organization of data depending
+// on the number of species or temperatures chosen
+// Pre : none
+// Post : none
+function formatGraphData() {    
+  if(config.speciesList.length > 1) {
+    let displaySpecies = speciesGroup.filter(
+      (species) => config.speciesList.indexOf(species.name) >= 0
+    );
+    let speciesData = displaySpecies.map(function(group) {
+      return {
+        name: group.name,
+        label: group.label,
+        color: group.color,
+        values: config.graphData[`@${config.tempList[0]}`].map(function(d) {
+          return {
+            time: (config.timeInterval * d.interval) / 60,
+            value: Math.round(d[group.name])
+          }
+        })
+      }
+    });
+    return {
+      title: "Bacteria Growth at " + config.tempList[0] + "°C",
+      data: speciesData
+    };
+  }
+
+  let tempData = [];
+  for(let i = 0; i < config.tempList.length; i++) {
+    tempData.push({
+      name: "temp" + config.tempList[i],
+      label: config.tempList[i] + "° Celsius",
+      color: speciesGroup[i].color,
+      values: config.graphData[`@${config.tempList[i]}`].map(function(d) {
+        return {
+          time: (config.timeInterval * d.interval) / 60,
+          value: d[config.speciesList[0]]
+        }
+      })
+    })
+  }
+  return {
+    title: speciesGroup.filter( (species) =>
+      species.name == config.speciesList[0]
+    )[0].label + " Growth",
+    data: tempData
+  };
 }
 
 // Adds a linear graph (hour intervals) using growth data stored in config.graphData
-// Pre : temp is a number (integer) variable representing the given temperature
-// Post : a line graph is added to 'displayContainer' (HTML div element)
-function addGraph(temp, data) {
+// Utilizes Function(s)...formatGraphData
+// Pre : none
+// Post : a linear line graph is added to 'displayContainer' (HTML div element)
+function addGraph() {
+  let {title, data} = formatGraphData();
   var svg = d3.select("#displayContainer")
     .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -530,13 +620,15 @@ function addGraph(temp, data) {
     .attr("y", 0 - (margin.top / 2))
     .attr("text-anchor", "left")
     .style("font-size", "16px")
-    .text(`Bacteria Growth at ${temp} °C`);
+    .text(title);
 }
 
 // Adds a log2 graph (hour intervals) using growth data stored in config.graphData
-// Pre : temp is a number (integer) variable representing the given temperature
+// Utilizes Function(s)...formatGraphData
+// Pre : none
 // Post : a log2 line graph is added to 'displayContainer' (HTML div element)
-function addLog2Graph(temp, data) {
+function addLog2Graph() {
+  let {title, data} = formatGraphData();
   var svg = d3.select("#displayContainer")
     .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -617,13 +709,15 @@ function addLog2Graph(temp, data) {
     .attr("y", 0 - (margin.top / 2))
     .attr("text-anchor", "left")
     .style("font-size", "16px")
-    .text(`Log2 Bacteria Growth at ${temp} °C`);
+    .text(`Log 2 ${title}`);
 }
 
 // Adds a log10 graph (hour intervals) using growth data stored in cofig.graphData
-// Pre : temp is a number (integer) variable representing the given temperature
+// Utilizes Function(s)...formatGraphData
+// Pre : none
 // Post : a log10 line graph is added to 'displayContainer' (HTML div element)
-function addLog10Graph(temp, data) {
+function addLog10Graph() {
+  let {title, data} = formatGraphData();
   var svg = d3.select("#displayContainer")
     .append("svg")
       .attr("width", width + margin.left + margin.right)
@@ -703,7 +797,7 @@ function addLog10Graph(temp, data) {
     .attr("y", 0 - (margin.top / 2))
     .attr("text-anchor", "left")
     .style("font-size", "16px")
-    .text(`Log10 Bacteria Growth at ${temp} °C`);
+    .text(`Log 10 ${title}`);
 }
 
 // Reset configuration lists/variables to their initial state
@@ -726,11 +820,10 @@ function runSimulation() {
   resetConfiguration();
 
   reflectUI();
-  
+
+  highestY = 0;
   config.tempList.forEach( (temp) => {
     numIntervals = 0;
-    highestY = 0;
-    
     gatherData(temp);
   })
 
