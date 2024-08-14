@@ -1,7 +1,7 @@
 /*
-  Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+  Authors : Rena Ahn, Gina Philipose
   CSS File : style.css
-  Last Update : July 17th, 2024
+  Last Update : July 10th, 2024
 
   Purpose : Define the styling of the Growth Curve Simulation's main page
 */
@@ -30,19 +30,6 @@ h1{ /* title text */
     background-color: rgb(59, 104, 255);
     margin-top: 0px;
     margin-bottom: 10px;
-}
-
-#form1 {
-    text-align: center;
-    padding: 15px;
-}
-#form1 > div:first-child {
-    text-align: left;
-
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
 }
 
 .view {
@@ -96,6 +83,64 @@ button:hover{
     opacity: .6;
     cursor: pointer;
 }
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* guide circles */
+#addBacteriaGuide, #removeBacteriaGuide, #addTempGuide, #removeTempGuide {
+    background-color: white;
+    font-size: large;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    border: 2px black solid;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+    visibility: hidden;
+}
+#addBacteriaGuide .toolText, #removeBacteriaGuide .toolText {
+    visibility: hidden;
+    width: 300px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    bottom: 0px;
+    left: 25px;
+}
+#addBacteriaGuide:hover .toolText, #removeBacteriaGuide:hover .toolText,
+#addTempGuide:hover .toolText, #removeTempGuide:hover .toolText {
+    visibility: visible;
+}
+#addTempGuide .toolText {
+    visibility: hidden;
+    width: 300px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    bottom: 30px;
+    right: 0px;
+}
+#removeTempGuide .toolText {
+    visibility: hidden;
+    width: 300px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    top: 30px;
+    right: 0px;
+}
 
 /* Bacteria Menus Container */
 #menuContainer{
@@ -103,12 +148,16 @@ button:hover{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    margin-top: 4px;
+    margin-right: 10px;
+}
+/* Bacteria Input */
+div#menuContainer select {
+    font-style: italic;
+    margin-bottom: 2px;
 }
 
 /* sliders */
-.slider1 {
-    display: flex;
-}
 input[type="range"]{
     -webkit-appearance: none;
     appearance: none;
@@ -255,6 +304,27 @@ input[type="radio"]{
     bottom: 150%;
     left: 50%;
     margin-left: -205px; 
+}
+
+/* Positioning */
+#form1 {
+    text-align: center;
+    padding: 15px;
+}
+#form1 > div {
+    text-align: left;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+#bacteriaInputBox, #tempInputBox {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 div#displayContainer { /* display box styling */
