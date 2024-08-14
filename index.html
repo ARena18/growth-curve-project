@@ -19,7 +19,7 @@
     <script src="https://d3js.org/d3.v4.js"></script>
   </head>
 
-    <body>
+  <body>
     <div class="topbox">
       <h1>Bacterial Growth and Temperature Simulation </h1>
     </div>
@@ -30,8 +30,8 @@
       <div>
         <p>The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.<br>
           Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
-          psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
-          temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
+        psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
+        temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
           through four phases:</p>
 
         <!--Phase Information-->
@@ -87,89 +87,108 @@
         </i>
       </div>
       <img id="binaryFissionImg"
-            src="https://everyone.plos.org/wp-content/uploads/sites/5/legacy-featured-images/Staphylococcus_aureus_VISA_21-16x9.jpg"
+            src="binaryFission.jpg"
             alt="bacterial cell undergoing binary fission">
+      <!-- Source of Image: https://everyone.plos.org/wp-content/uploads/sites/5/legacy-featured-images/Staphylococcus_aureus_VISA_21-16x9.jpg -->
     </div>
-    <br>
 
     <form id="form1">
       <div>
-      <div>
-        <!--Select View-->
-        <div class="view">
-          <label for="view">Select View:
-          <select id="view">
-            <option value="linear">Linear</option>
-            <option value="log2">log_2</option>
-            <option value="log10">log_10</option>
-            <option value="table">Table</option>
-            <option value="cross-section">Cross-Section</option>
-          </select>
-          </label>
+        <div>
+          <!--Select View-->
+          <div class="view">
+            <label for="view">Select View:
+            <select id="view">
+              <option value="linear">Linear</option>
+              <option value="log2">log_2</option>
+              <option value="log10">log_10</option>
+              <option value="table">Table</option>
+              <option value="cross-section">Cross-Section</option>
+            </select>
+            </label>
+          </div>
+          <br>
+
+          <!--Radio Bubbles-->
+          <div class="radioContainer">
+            <label for="bubble1">
+              <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
+            </label>
+            <br>
+            <label for="bubble2">
+              <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
+            </label>
+          </div>
         </div>
         <br>
 
-        <!--Radio Bubbles-->
-        <div class="radioContainer">
-          <label for="bubble1">
-            <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
-          </label>
-          <br>
-          <label for="bubble2">
-            <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
-          </label>
+        <div>
+          <div id="bacteriaInputBox">
+            <!--Select Bacteria(First Menu)-->
+            <label for="menuContainer"> Select Species:
+            </label>
+
+            <!--Adding more menus-->
+            <div id="menuContainer">
+              <select id="bacteria1">
+                <option value="NULL"> </option>
+                <option value="eColi">Escherichia coli</option>
+                <option value="mycobacteriumTuberculosis">Mycobacterium tuberculosis</option>
+                <option value="clostridiumTetanus">Clostridium tetanus</option>
+                <option value="listeriaMonocytogenes">Listeria monocytogenes</option>
+                <option value="thermusAquaticus">Thermus acquaticus</option>
+              </select>
+            </div>
+          
+            <!--Add/Remove Bacteria Buttons-->
+            <div id="buttonsContainer">
+              <button id="addBacteria" type="button"> Add Species </button>
+              <div id="addBacteriaGuide">?
+                <span class="toolText"></span>
+              </div>
+              <br>
+              <button id="removeBacteria" type="button"> Remove Species</button>
+              <div id="removeBacteriaGuide">?
+                <span class="toolText"></span>
+              </div>
+            </div>
+          </div>
+
+          <div id="tempInputBox">
+            <!--Select Temperature(First Slider and Input Box)-->
+            <label class="range1" for="slider1">Select Temperature (Celsius):
+            </label>
+
+            <div>
+            <!--Adding more sliders/input boxes-->
+            <div id="temperatures">
+              <div>
+                <input type="range" value="50" min="0" max="100" id="slider1">
+                <input type="text" id="sliderInputBox1" value="50">
+              </div>
+            </div>
+
+            <!--Slider Color Key-->
+            <div class="colorBox">
+              <div class="box1"></div> Human Body
+              <div class="box2"></div> Fever
+            </div>
+            </div>
+
+            <!--Add/Remove Temperature Buttons-->
+            <div id="tempContainer">
+              <button id="addTemp" type="button"> Add Temperature </button>
+              <div id="addTempGuide">?
+                <span class="toolText"></span>
+              </div>
+              <br>
+              <button id="removeTemp" type="button"> Remove Temperature</button>
+              <div id="removeTempGuide">?
+                <span class="toolText"></span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div>
-        <!--Select Bacteria(First Menu)-->
-        <div class="bacteria1">
-          <label for="bacteria1"> Select Bacteria:
-          <br>
-          <select id="bacteria1">
-            <option value="NULL"> </option>
-            <option value="eColi">E. Coli</option>
-            <option value="mycobacteriumTuberculosis">Mycobacterium Tuberculosis</option>
-            <option value="clostridiumTetanus">Clostridium Tetanus</option>
-            <option value="listeriaMonocytogenes">Listeria Monocytogenes</option>
-            <option value="thermusAquaticus">Thermus Acquaticus</option>
-          </select>
-          </label>
-        </div>
-
-        <!--Adding more menus-->
-        <div id="menuContainer"></div>
-      
-        <!--Add/Remove Bacteria Buttons-->
-        <div id="buttonsContainer">
-          <button id="addBacteria" type="button"> Add Bacteria </button>
-          <button id="removeBacteria" type="button"> Remove Bacteria</button>
-        </div>
-      </div>
-
-      <div>
-        <!--Select Temperature(First Slider and Input Box)-->
-        <label class="range1" for="slider1">Select Temperature (Celsius)
-          <br>
-          <input type="range" value="50" min="0" max="100" id="slider1">
-          <input type="text" id="sliderInputBox1" value="50"> 
-        </label>
-
-        <!--Adding more sliders/input boxes-->
-        <div id="temperatures"></div>
-
-        <!--Slider Color Key-->
-        <div class="colorBox">
-          <div class="box1"></div> Human Body
-          <div class="box2"></div> Fever
-        </div>
-
-        <!--Add/Remove Temperature Buttons-->
-        <div id="tempContainer">
-          <button id="addTemp" type="button"> Add Temperature </button>
-          <button id="removeTemp" type="button"> Remove Temperature</button>
-        </div>
-      </div>
       </div>
 
       <!--Overall Submission Button-->
