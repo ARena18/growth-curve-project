@@ -1,14 +1,14 @@
 // Authors : Rena Ahn, Gina Philipose
 // JavaScript File : script.js
-// Last Update : August 7th, 2024
+// Last Update : August 28th, 2024
 
 // Purpose : Define the functionality of user input forms
 
 const viewMenu = document.getElementById("view"); // view select menu
 const container = document.getElementById("menuContainer"); // bacteria menus get added here
-const bacteria = document.getElementById("addBacteria"); // add bacteria button
+const addBacteria = document.getElementById("addBacteria"); // add bacteria button
 const removeBacteria = document.getElementById("removeBacteria"); // remove bacteria button
-const container2 = document.getElementById("temperatures"); // temperature sliders/input boxes get added here
+const container2 = document.getElementById("sliderContainer"); // temperature sliders/input boxes get added here
 const addTemp = document.getElementById("addTemp"); // add temperature button
 const removeTemp = document.getElementById("removeTemp"); // remove temperature button
 const submitButton = document.getElementById("submitButton"); // run simulation button
@@ -20,13 +20,20 @@ const form1 = document.getElementById("form1"); // html form
 
 // Nondynamic: temperature slider/inputbox and bacteria menu
 const slider1 = document.getElementById("slider1"); // initial slider
-const inputBox1 = document.getElementById("sliderInputBox1"); // initial slider input box
+const inputBox1 = document.getElementById("sliderBox1"); // initial slider input box
 const menu1 = document.getElementById("bacteria1"); // initial bacteria menu
 
 // counters
 let bacteriaCount = 1; // bacteria menu counter
 let tempCount = 1; // temperature slider/input box counter
-//let count3 = 2; // ensures that there can only be up to 6 elements of either bacteria menus or temperature sliders/inputboxes
+
+const speciesLabels = {
+    eColi: "Escherichia coli",
+    mycobacteriumTuberculosis: "Mycobacterium tuberculosis",
+    clostridiumTetanus: "Clostridium tetanus",
+    listeriaMonocytogenes: "Listeria monocytogenes",
+    thermusAquaticus: "Thermus aquaticus"
+}
 
 // load past user input after running the simulation
 window.addEventListener("load", reloadData);
@@ -59,6 +66,11 @@ function reloadData(){
     }
     if(tempCount <= 1) { disableRemoveTemp(); }
 }
+
+// submit
+form1.addEventListener("submit", function(event){
+    event.preventDefault();
+});
 
 // sets slider colors
 function sliderColor(inputBox, sliderBar) {
@@ -166,13 +178,24 @@ function disableRemoveTemp() {
         = "There must be at least one temperature slider.";
 }
 
-// submit
-form1.addEventListener("submit", function(event){
-    event.preventDefault();
-    // var collectData = new FormData(event.target);
-});
+// returns a list of chosen species
+function getChosenSpecies() {
+    let speciesList = [];
+    let num = 1;
+    let bacteriaInput = document.getElementById(`bacteria${num}`);
+    while(bacteriaInput) {   // updating speciesList
+        if(bacteriaInput.value != "NULL") {
+            speciesList.push(bacteriaInput.value);
+        }
 
-// saving user input
+        num++;
+        bacteriaInput = document.getElementById(`bacteria${num}`);
+    }
+
+    return speciesList;
+}
+
+/* Saving User Input */
 // view menu
 viewMenu.addEventListener("change", function() {
     localStorage.setItem("view", viewMenu.value);
@@ -233,38 +256,23 @@ inputBox1.addEventListener("input", function(){
 });
 
 // adds a new bacteria menu + saves/loads past user input
-bacteria.addEventListener("click", function() {
+addBacteria.addEventListener("click", function() {
     if (bacteriaCount < 5 && tempCount <= 1) {
         bacteriaCount++;
 
-        const newInput = document.createElement("select");
-        const option1 = document.createElement("option");
-        const option2 = document.createElement("option");
-        const option3 = document.createElement("option");
-        const option4 = document.createElement("option");
-        const option5 = document.createElement("option");
-        const option6 = document.createElement("option");
-
-        option1.textContent = "";
-        option1.value = "NULL";
-        option2.textContent = "Escherichia coli";
-        option2.value = "eColi";
-        option3.textContent = "Mycobacterium tuberculosis";
-        option3.value = "mycobacteriumTuberculosis";
-        option4.textContent = "Clostridium tetanus";
-        option4.value = "clostridiumTetanus";
-        option5.textContent = "Listeria monocytogenes";
-        option5.value = "listeriaMonocytogenes";
-        option6.textContent = "Thermus aquaticus";
-        option6.value = "thermusAquaticus";
-
-        newInput.appendChild(option1);
-        newInput.appendChild(option2);
-        newInput.appendChild(option3);
-        newInput.appendChild(option4);
-        newInput.appendChild(option5);
-        newInput.appendChild(option6);
+        let speciesList = getChosenSpecies();
+        let newInput = document.createElement("select");
         newInput.id = 'bacteria' + bacteriaCount;
+
+        // adds options to newInput
+        for(const species in speciesLabels) {
+            if(!speciesList.includes(species.toString())) {
+                let option = document.createElement("option");
+                option.value = species.toString();
+                option.textContent = speciesLabels[species];
+                newInput.appendChild(option);
+            }
+        }
         container.appendChild(newInput);
 
         // saves user input
