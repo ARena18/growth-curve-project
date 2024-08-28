@@ -4,19 +4,23 @@
 <!-- 
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   HTML File : index.html
-  Last Update : July 17th, 2024
-  
+  Last Update : August 28th, 2024
+
   Purpose : Define the main page of the Growth Curve Simulation
 -->
 
   <head>
     <meta charset="utf-8">
     <meta name="keywords" content="HTML, CSS, JavaScript">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  
     <title>Growth Curve Project</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
+    <!--JavaScript Files-->
+    <script src="script.js" defer></script>
+    <script src="species.js" defer></script>
+    <!--Imports-->
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
 
   <body>
@@ -30,14 +34,13 @@
       <div>
         <p>The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.<br>
           Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
-        psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
-        temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
+          psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
+          temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
           through four phases:</p>
 
         <!--Phase Information-->
         <i>
-          <div class="moreInfo">
-
+          <div id="moreInfo">
             <!--Lag Phase-->
             <div class="toolTip1">
               lag phase,
@@ -48,12 +51,11 @@
               </span>
             </div>
             
-            <!--Exponential Phase-->
+            <!--Exponential/Log Phase-->
             <div class="toolTip2">
-              exponential phase,
+              exponential/log phase,
               <span class="text2">
-                After the population has adapted to the environment, the cell population increases exponentially until all resources and nutrients 
-                have run out.
+                In this phase, cells divide, causing the population to increase exponentially until the necessary resources run out.
               </span>
             </div>
       
@@ -61,28 +63,18 @@
             <div class="toolTip3">
               stationary phase,
               <span class="text3">
-                Once all nutrients have been used up, the population stays constant as some cells die and others continue to divide. The length of 
-                the stationary phase may depend on species and medium as some bacteria can remain viable for long periods of time even when starved 
-                of nutrients.
+                In this phase, cell division rate is equal to cell death rate due to lack of nutrients of space,
+                causing the population size to stay constant.
               </span>
             </div>
             
-            <!--Death Phase-->
+            <!--Death/Prolonged Decline Phase-->
             <div class="toolTip4">
-              death phase,
+              death/prolonged decline phase,
               <span class="text4">
-                An extended period where the bacteria present continue to gradually decrease in number.
+                In this phase, the number of live cells is exponentially decreasing.
               </span>
             </div> and
-            
-            <!--Phase of Prolonged Decline-->
-            <div class="toolTip5">
-              phase of prolonged decline.
-              <span class="text5">
-                Death phase is characterized by an exponential decrease in the number of living cells. During this time, cells die at a greater rate 
-                than they are dividing.
-              </span>
-            </div>
           </div>
         </i>
       </div>
@@ -111,27 +103,22 @@
 
           <!--Radio Bubbles-->
           <div class="radioContainer">
-            <label for="bubble1">
+            <label>Select Environment:
+              <br>
               <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
             </label>
-            <br>
-            <label for="bubble2">
+            <label>
+              <br>
               <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
             </label>
           </div>
         </div>
-        <br>
 
         <div>
-          <div id="bacteriaInputBox">
-            <!--Select Bacteria(First Menu)-->
-            <label for="menuContainer"> Select Species:
-            </label>
-
-            <!--Adding more menus-->
+          <div id="bacteriaInputBox">Select Species:
+            <!--Select Species Menus-->
             <div id="menuContainer">
               <select id="bacteria1">
-                <option value="NULL"> </option>
                 <option value="eColi">Escherichia coli</option>
                 <option value="mycobacteriumTuberculosis">Mycobacterium tuberculosis</option>
                 <option value="clostridiumTetanus">Clostridium tetanus</option>
@@ -154,25 +141,21 @@
             </div>
           </div>
 
-          <div id="tempInputBox">
-            <!--Select Temperature(First Slider and Input Box)-->
-            <label class="range1" for="slider1">Select Temperature (Celsius):
-            </label>
-
+          <div id="tempInputBox">Select Temperature (Celsius):
             <div>
-            <!--Adding more sliders/input boxes-->
-            <div id="temperatures">
-              <div>
-                <input type="range" value="50" min="0" max="100" id="slider1">
-                <input type="text" id="sliderInputBox1" value="50">
+              <!--Sliders/Input Boxes-->
+              <div id="sliderContainer">
+                <div>
+                  <input type="range" value="50" min="0" max="100" id="slider1">
+                  <input type="text" id="sliderBox1" value="50">
+                </div>
               </div>
-            </div>
 
-            <!--Slider Color Key-->
-            <div class="colorBox">
-              <div class="box1"></div> Human Body
-              <div class="box2"></div> Fever
-            </div>
+              <!--Slider Color Key-->
+              <div id="colorBoxContainer">
+                <div id="bodyBox"></div> Human Body
+                <div id="feverBox"></div> Fever
+              </div>
             </div>
 
             <!--Add/Remove Temperature Buttons-->
@@ -197,11 +180,12 @@
     <br>
 
       <!--Display Area/Box-->
+    <section id="displaySection">
       <div id="displayContainer">
       </div>
-
-      <!--JavaScript Files-->
-      <script src="script.js"></script>
-      <script src="species.js"></script>
+      <div id="graphContainer">
+        <canvas id="graph"></canvas>
+      </div>
+    </section>
   </body>
 </html>
