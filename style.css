@@ -1,7 +1,7 @@
 /*
   Authors : Rena Ahn, Gina Philipose
   CSS File : style.css
-  Last Update : July 10th, 2024
+  Last Update : August 18th, 2024
 
   Purpose : Define the styling of the Growth Curve Simulation's main page
 */
@@ -12,6 +12,7 @@
 body {
     background-color: rgb(132, 163, 255);
     font-size: x-large;
+    margin: 5px;
 }
 .topbox{ /* title box */
     display: flex;
@@ -32,8 +33,13 @@ h1{ /* title text */
     margin-bottom: 10px;
 }
 
-.view {
+.view { /* display menu */
     margin-top: -10px;
+}
+
+/* Radio */
+input[type="radio"]{
+    cursor: pointer;
 }
 
 /* select menus */
@@ -42,8 +48,69 @@ select{
     font-size: 75%;
 }
 
+/* Bacteria Menus Container */
+#menuContainer{
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    margin-right: 10px;
+}
+/* Bacteria Input */
+#menuContainer select {
+    font-style: italic;
+    margin-bottom: 2px;
+}
+
+/* Sliders */
+input[type="range"]{
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: rgb(223, 223, 223);
+    width: 400px;
+    border-radius: 5px;
+    height: 12px;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 17px; 
+    height: 17px;
+    border-radius: 50%;
+    background: rgb(171, 171, 171);
+    cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+    opacity: 0.8;
+}
+/* Slider Text Boxes */
+input[type="text"]{
+    background-color: white;
+    width: 30px;
+    font-size: 15px;
+    cursor: pointer;
+}
+/*.sliders {
+    display:flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 200px;
+}
+.row {
+    display: flex;
+    flex-direction: row;
+}*/
+#sliderContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+#sliderBox1 {
+    margin-left: -6px;
+}
+
 /* color key */
-.colorBox{
+#colorBoxContainer{
     display: inline-flex;
     background-color: rgb(223, 223, 223);
     margin-left: 3px;
@@ -56,7 +123,7 @@ select{
     margin: 0px;    
 }
 /* Human Body */
-.box1 {
+#bodyBox {
     display: flex;
     background-color: rgb(255, 139, 139);
     width: 30px;
@@ -65,7 +132,7 @@ select{
     margin-right: 0px;
 }
 /* Fever */
-.box2 {
+#feverBox {
     display: flex;
     background-color: rgb(255, 69, 2);
     width: 30px;
@@ -142,72 +209,6 @@ button:disabled {
     right: 0px;
 }
 
-/* Bacteria Menus Container */
-#menuContainer{
-    width: 220px;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    margin-top: 4px;
-    margin-right: 10px;
-}
-/* Bacteria Input */
-div#menuContainer select {
-    font-style: italic;
-    margin-bottom: 2px;
-}
-
-/* sliders */
-input[type="range"]{
-    -webkit-appearance: none;
-    appearance: none;
-    background-color: rgb(223, 223, 223);
-    width: 400px;
-    border-radius: 5px;
-    height: 12px;
-}
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 17px; 
-    height: 17px;
-    border-radius: 50%;
-    background: rgb(171, 171, 171);
-    cursor: pointer;
-}
-input[type="range"]::-webkit-slider-thumb:hover {
-    opacity: 0.8;
-}
-/* Slider Text Boxes */
-input[type="text"]{
-    background-color: white;
-    width: 30px;
-    font-size: 15px;
-    cursor: pointer;
-}
-.sliders {
-    display:flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 200px;
-}
-.row {
-    display: flex;
-    flex-direction: row;
-}
-#temperatures {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-#sliderInputBox1 {
-    margin-left: -6px;
-}
-
-/* Radio */
-input[type="radio"]{
-    cursor: pointer;
-}
-
 /* Additional Information Section */
 /* General Information Box */
 #infobox {
@@ -218,7 +219,7 @@ input[type="radio"]{
     gap: 10px;
 }
 /* General Information Content */
-.moreInfo {
+#moreInfo {
     font-size: 17px;
 }
 #binaryFissionImg {
@@ -228,7 +229,7 @@ input[type="radio"]{
 }
 
 /* Phases */
-.toolTip1, .toolTip2, .toolTip3, .toolTip4, .toolTip5 {
+.toolTip1, .toolTip2, .toolTip3, .toolTip4 {
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted black;
@@ -260,7 +261,7 @@ input[type="radio"]{
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
-.toolTip1:hover .text1, .toolTip2:hover .text2, .toolTip3:hover .text3, .toolTip4:hover .text4, .toolTip5:hover .text5  {
+.toolTip1:hover .text1, .toolTip2:hover .text2, .toolTip3:hover .text3, .toolTip4:hover .text4  {
     display: flex;
     visibility: visible;
 }
@@ -279,7 +280,7 @@ input[type="radio"]{
     left: 120%;
     margin-left: -205px; 
 }
-.toolTip2 .text2::after, .toolTip3 .text3::after, .toolTip4 .text4::after, .toolTip5 .text5::after {
+.toolTip2 .text2::after, .toolTip3 .text3::after, .toolTip4 .text4::after {
     display: flex;
     content: "";
     position: absolute;
@@ -290,7 +291,7 @@ input[type="radio"]{
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
-.toolTip3 .text3, .toolTip4 .text4, .toolTip5 .text5 {
+.toolTip3 .text3, .toolTip4 .text4 {
     display: flex;
     visibility: hidden;
     width: 400px; 
@@ -318,6 +319,7 @@ input[type="radio"]{
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-between;
+    gap: 20px;
 }
 
 #bacteriaInputBox, #tempInputBox {
@@ -327,14 +329,23 @@ input[type="radio"]{
     gap: 10px;
 }
 
-div#displayContainer { /* display box styling */
+/*Display Section Sytling */
+#displaySection {
     background-color: white;
+    display: flex;
+    justify-content: center;
+}
+#displayContainer {
     font-size: medium;
 
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+}
+#graphContainer {
+    width: 80%;
+    display: none;
 }
 
 table { /* table */
