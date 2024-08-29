@@ -1,7 +1,7 @@
 /*
-  Authors : Rena Ahn, Gina Philipose, Zachary Mullen
+  Authors : Rena Ahn, Gina Philipose
   CSS File : style.css
-  Last Update : July 17th, 2024
+  Last Update : August 18th, 2024
 
   Purpose : Define the styling of the Growth Curve Simulation's main page
 */
@@ -12,6 +12,7 @@
 body {
     background-color: rgb(132, 163, 255);
     font-size: x-large;
+    margin: 5px;
 }
 .topbox{ /* title box */
     display: flex;
@@ -32,21 +33,13 @@ h1{ /* title text */
     margin-bottom: 10px;
 }
 
-#form1 {
-    text-align: center;
-    padding: 15px;
-}
-#form1 > div:first-child {
-    text-align: left;
-
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-}
-
-.view {
+.view { /* display menu */
     margin-top: -10px;
+}
+
+/* Radio */
+input[type="radio"]{
+    cursor: pointer;
 }
 
 /* select menus */
@@ -55,60 +48,22 @@ select{
     font-size: 75%;
 }
 
-/* color key */
-.colorBox{
-    display: inline-flex;
-    background-color: rgb(223, 223, 223);
-    margin-left: 3px;
-    width: 300px;
-    height: 30px;
-    align-items: center;
-    justify-content: space-evenly;
-    font-size: 15px;
-    text-indent: -30px;;
-    margin: 0px;    
-}
-/* Human Body */
-.box1 {
-    display: flex;
-    background-color: rgb(255, 139, 139);
-    width: 30px;
-    height: 20px;
-    margin-left: -30px;
-    margin-right: 0px;
-}
-/* Fever */
-.box2 {
-    display: flex;
-    background-color: rgb(255, 69, 2);
-    width: 30px;
-    height: 20px;
-    margin-left: 0px;
-    margin-right: 0px;
-}
-
-/* buttons */
-button {
-    background-color: white;
-    font-size: 75%;
-}
-button:hover{
-    opacity: .6;
-    cursor: pointer;
-}
-
 /* Bacteria Menus Container */
 #menuContainer{
     width: 220px;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+    margin-top: 4px;
+    margin-right: 10px;
+}
+/* Bacteria Input */
+#menuContainer select {
+    font-style: italic;
+    margin-bottom: 2px;
 }
 
-/* sliders */
-.slider1 {
-    display: flex;
-}
+/* Sliders */
 input[type="range"]{
     -webkit-appearance: none;
     appearance: none;
@@ -135,7 +90,7 @@ input[type="text"]{
     font-size: 15px;
     cursor: pointer;
 }
-.sliders {
+/*.sliders {
     display:flex;
     flex-direction: column;
     align-items: flex-start;
@@ -144,19 +99,114 @@ input[type="text"]{
 .row {
     display: flex;
     flex-direction: row;
-}
-#temperatures {
+}*/
+#sliderContainer {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
 }
-#sliderInputBox1 {
+#sliderBox1 {
     margin-left: -6px;
 }
 
-/* Radio */
-input[type="radio"]{
+/* color key */
+#colorBoxContainer{
+    display: inline-flex;
+    background-color: rgb(223, 223, 223);
+    margin-left: 3px;
+    width: 300px;
+    height: 30px;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 15px;
+    text-indent: -30px;;
+    margin: 0px;    
+}
+/* Human Body */
+#bodyBox {
+    display: flex;
+    background-color: rgb(255, 139, 139);
+    width: 30px;
+    height: 20px;
+    margin-left: -30px;
+    margin-right: 0px;
+}
+/* Fever */
+#feverBox {
+    display: flex;
+    background-color: rgb(255, 69, 2);
+    width: 30px;
+    height: 20px;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+/* buttons */
+button {
+    background-color: white;
+    font-size: 75%;
+}
+button:hover{
+    opacity: .6;
     cursor: pointer;
+}
+button:disabled {
+    opacity: .5;
+    cursor: not-allowed;
+}
+
+/* guide circles */
+#addBacteriaGuide, #removeBacteriaGuide, #addTempGuide, #removeTempGuide {
+    background-color: white;
+    font-size: large;
+    text-align: center;
+    width: 20px;
+    height: 20px;
+    border: 2px black solid;
+    border-radius: 50%;
+    position: relative;
+    display: inline-block;
+    visibility: hidden;
+}
+#addBacteriaGuide .toolText, #removeBacteriaGuide .toolText {
+    visibility: hidden;
+    width: 300px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    bottom: 0px;
+    left: 25px;
+}
+#addBacteriaGuide:hover .toolText, #removeBacteriaGuide:hover .toolText,
+#addTempGuide:hover .toolText, #removeTempGuide:hover .toolText {
+    visibility: visible;
+}
+#addTempGuide .toolText {
+    visibility: hidden;
+    width: 300px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    bottom: 30px;
+    right: 0px;
+}
+#removeTempGuide .toolText {
+    visibility: hidden;
+    width: 300px;
+    background-color: black;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    top: 30px;
+    right: 0px;
 }
 
 /* Additional Information Section */
@@ -169,7 +219,7 @@ input[type="radio"]{
     gap: 10px;
 }
 /* General Information Content */
-.moreInfo {
+#moreInfo {
     font-size: 17px;
 }
 #binaryFissionImg {
@@ -179,7 +229,7 @@ input[type="radio"]{
 }
 
 /* Phases */
-.toolTip1, .toolTip2, .toolTip3, .toolTip4, .toolTip5 {
+.toolTip1, .toolTip2, .toolTip3, .toolTip4 {
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted black;
@@ -211,7 +261,7 @@ input[type="radio"]{
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
-.toolTip1:hover .text1, .toolTip2:hover .text2, .toolTip3:hover .text3, .toolTip4:hover .text4, .toolTip5:hover .text5  {
+.toolTip1:hover .text1, .toolTip2:hover .text2, .toolTip3:hover .text3, .toolTip4:hover .text4  {
     display: flex;
     visibility: visible;
 }
@@ -230,7 +280,7 @@ input[type="radio"]{
     left: 120%;
     margin-left: -205px; 
 }
-.toolTip2 .text2::after, .toolTip3 .text3::after, .toolTip4 .text4::after, .toolTip5 .text5::after {
+.toolTip2 .text2::after, .toolTip3 .text3::after, .toolTip4 .text4::after {
     display: flex;
     content: "";
     position: absolute;
@@ -241,7 +291,7 @@ input[type="radio"]{
     border-style: solid;
     border-color: black transparent transparent transparent;
 }
-.toolTip3 .text3, .toolTip4 .text4, .toolTip5 .text5 {
+.toolTip3 .text3, .toolTip4 .text4 {
     display: flex;
     visibility: hidden;
     width: 400px; 
@@ -257,14 +307,45 @@ input[type="radio"]{
     margin-left: -205px; 
 }
 
-div#displayContainer { /* display box styling */
+/* Positioning */
+#form1 {
+    text-align: center;
+    padding: 15px;
+}
+#form1 > div {
+    text-align: left;
+
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+#bacteriaInputBox, #tempInputBox {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+/*Display Section Sytling */
+#displaySection {
     background-color: white;
+    display: flex;
+    justify-content: center;
+}
+#displayContainer {
     font-size: medium;
 
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+}
+#graphContainer {
+    width: 80%;
+    display: none;
 }
 
 table { /* table */

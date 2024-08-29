@@ -4,22 +4,26 @@
 <!-- 
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   HTML File : index.html
-  Last Update : July 17th, 2024
-  
+  Last Update : August 28th, 2024
+
   Purpose : Define the main page of the Growth Curve Simulation
 -->
 
   <head>
     <meta charset="utf-8">
     <meta name="keywords" content="HTML, CSS, JavaScript">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  
     <title>Growth Curve Project</title>
     <link href="style.css" rel="stylesheet" type="text/css" />
+    <!--JavaScript Files-->
+    <script src="script.js" defer></script>
+    <script src="species.js" defer></script>
+    <!--Imports-->
     <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
 
-    <body>
+  <body>
     <div class="topbox">
       <h1>Bacterial Growth and Temperature Simulation </h1>
     </div>
@@ -36,8 +40,7 @@
 
         <!--Phase Information-->
         <i>
-          <div class="moreInfo">
-
+          <div id="moreInfo">
             <!--Lag Phase-->
             <div class="toolTip1">
               lag phase,
@@ -48,12 +51,11 @@
               </span>
             </div>
             
-            <!--Exponential Phase-->
+            <!--Exponential/Log Phase-->
             <div class="toolTip2">
-              exponential phase,
+              exponential/log phase,
               <span class="text2">
-                After the population has adapted to the environment, the cell population increases exponentially until all resources and nutrients 
-                have run out.
+                In this phase, cells divide, causing the population to increase exponentially until the necessary resources run out.
               </span>
             </div>
       
@@ -61,115 +63,115 @@
             <div class="toolTip3">
               stationary phase,
               <span class="text3">
-                Once all nutrients have been used up, the population stays constant as some cells die and others continue to divide. The length of 
-                the stationary phase may depend on species and medium as some bacteria can remain viable for long periods of time even when starved 
-                of nutrients.
+                In this phase, cell division rate is equal to cell death rate due to lack of nutrients of space,
+                causing the population size to stay constant.
               </span>
             </div>
             
-            <!--Death Phase-->
+            <!--Death/Prolonged Decline Phase-->
             <div class="toolTip4">
-              death phase,
+              death/prolonged decline phase,
               <span class="text4">
-                An extended period where the bacteria present continue to gradually decrease in number.
+                In this phase, the number of live cells is exponentially decreasing.
               </span>
             </div> and
-            
-            <!--Phase of Prolonged Decline-->
-            <div class="toolTip5">
-              phase of prolonged decline.
-              <span class="text5">
-                Death phase is characterized by an exponential decrease in the number of living cells. During this time, cells die at a greater rate 
-                than they are dividing.
-              </span>
-            </div>
           </div>
         </i>
       </div>
       <img id="binaryFissionImg"
-            src="https://everyone.plos.org/wp-content/uploads/sites/5/legacy-featured-images/Staphylococcus_aureus_VISA_21-16x9.jpg"
+            src="binaryFission.jpg"
             alt="bacterial cell undergoing binary fission">
+      <!-- Source of Image: https://everyone.plos.org/wp-content/uploads/sites/5/legacy-featured-images/Staphylococcus_aureus_VISA_21-16x9.jpg -->
     </div>
-    <br>
 
     <form id="form1">
       <div>
-      <div>
-        <!--Select View-->
-        <div class="view">
-          <label for="view">Select View:
-          <select id="view">
-            <option value="linear">Linear</option>
-            <option value="log2">log_2</option>
-            <option value="log10">log_10</option>
-            <option value="table">Table</option>
-            <option value="cross-section">Cross-Section</option>
-          </select>
-          </label>
-        </div>
-        <br>
-
-        <!--Radio Bubbles-->
-        <div class="radioContainer">
-          <label for="bubble1">
-            <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
-          </label>
+        <div>
+          <!--Select View-->
+          <div class="view">
+            <label for="view">Select View:
+            <select id="view">
+              <option value="linear">Linear</option>
+              <option value="log2">log_2</option>
+              <option value="log10">log_10</option>
+              <option value="table">Table</option>
+              <option value="cross-section">Cross-Section</option>
+            </select>
+            </label>
+          </div>
           <br>
-          <label for="bubble2">
-            <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
-          </label>
-        </div>
-      </div>
 
-      <div>
-        <!--Select Bacteria(First Menu)-->
-        <div class="bacteria1">
-          <label for="bacteria1"> Select Bacteria:
-          <br>
-          <select id="bacteria1">
-            <option value="NULL"> </option>
-            <option value="eColi">E. Coli</option>
-            <option value="mycobacteriumTuberculosis">Mycobacterium Tuberculosis</option>
-            <option value="clostridiumTetanus">Clostridium Tetanus</option>
-            <option value="listeriaMonocytogenes">Listeria Monocytogenes</option>
-            <option value="thermusAquaticus">Thermus Acquaticus</option>
-          </select>
-          </label>
+          <!--Radio Bubbles-->
+          <div class="radioContainer">
+            <label>Select Environment:
+              <br>
+              <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
+            </label>
+            <label>
+              <br>
+              <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
+            </label>
+          </div>
         </div>
 
-        <!--Adding more menus-->
-        <div id="menuContainer"></div>
-      
-        <!--Add/Remove Bacteria Buttons-->
-        <div id="buttonsContainer">
-          <button id="addBacteria" type="button"> Add Bacteria </button>
-          <button id="removeBacteria" type="button"> Remove Bacteria</button>
+        <div>
+          <div id="bacteriaInputBox">Select Species:
+            <!--Select Species Menus-->
+            <div id="menuContainer">
+              <select id="bacteria1">
+                <option value="eColi">Escherichia coli</option>
+                <option value="mycobacteriumTuberculosis">Mycobacterium tuberculosis</option>
+                <option value="clostridiumTetanus">Clostridium tetanus</option>
+                <option value="listeriaMonocytogenes">Listeria monocytogenes</option>
+                <option value="thermusAquaticus">Thermus acquaticus</option>
+              </select>
+            </div>
+          
+            <!--Add/Remove Bacteria Buttons-->
+            <div id="buttonsContainer">
+              <button id="addBacteria" type="button"> Add Species </button>
+              <div id="addBacteriaGuide">?
+                <span class="toolText"></span>
+              </div>
+              <br>
+              <button id="removeBacteria" type="button"> Remove Species</button>
+              <div id="removeBacteriaGuide">?
+                <span class="toolText"></span>
+              </div>
+            </div>
+          </div>
+
+          <div id="tempInputBox">Select Temperature (Celsius):
+            <div>
+              <!--Sliders/Input Boxes-->
+              <div id="sliderContainer">
+                <div>
+                  <input type="range" value="50" min="0" max="100" id="slider1">
+                  <input type="text" id="sliderBox1" value="50">
+                </div>
+              </div>
+
+              <!--Slider Color Key-->
+              <div id="colorBoxContainer">
+                <div id="bodyBox"></div> Human Body
+                <div id="feverBox"></div> Fever
+              </div>
+            </div>
+
+            <!--Add/Remove Temperature Buttons-->
+            <div id="tempContainer">
+              <button id="addTemp" type="button"> Add Temperature </button>
+              <div id="addTempGuide">?
+                <span class="toolText"></span>
+              </div>
+              <br>
+              <button id="removeTemp" type="button"> Remove Temperature</button>
+              <div id="removeTempGuide">?
+                <span class="toolText"></span>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      <div>
-        <!--Select Temperature(First Slider and Input Box)-->
-        <label class="range1" for="slider1">Select Temperature (Celsius)
-          <br>
-          <input type="range" value="50" min="0" max="100" id="slider1">
-          <input type="text" id="sliderInputBox1" value="50"> 
-        </label>
-
-        <!--Adding more sliders/input boxes-->
-        <div id="temperatures"></div>
-
-        <!--Slider Color Key-->
-        <div class="colorBox">
-          <div class="box1"></div> Human Body
-          <div class="box2"></div> Fever
-        </div>
-
-        <!--Add/Remove Temperature Buttons-->
-        <div id="tempContainer">
-          <button id="addTemp" type="button"> Add Temperature </button>
-          <button id="removeTemp" type="button"> Remove Temperature</button>
-        </div>
-      </div>
       </div>
 
       <!--Overall Submission Button-->
@@ -178,11 +180,12 @@
     <br>
 
       <!--Display Area/Box-->
+    <section id="displaySection">
       <div id="displayContainer">
       </div>
-
-      <!--JavaScript Files-->
-      <script src="script.js"></script>
-      <script src="species.js"></script>
+      <div id="graphContainer">
+        <canvas id="graph"></canvas>
+      </div>
+    </section>
   </body>
 </html>
