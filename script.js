@@ -1,9 +1,18 @@
 // Authors : Rena Ahn, Gina Philipose
 // JavaScript File : script.js
-// Last Update : August 28th, 2024
+// Last Update : August 30th, 2024
 
 // Purpose : Define the functionality of user input forms
 
+// Collapsible Tab Elements
+const infoSymbol = document.querySelector("#overviewContainer span");
+const infoTab = document.querySelector("#overviewContainer");
+const infoMenu = document.querySelector("#overviewContainer div.menu");
+const sheetSymbol = document.querySelector("#linksContainer span");
+const sheetTab = document.querySelector("#linksContainer");
+const sheetMenu = document.querySelector("#linksContainer div.menu");
+
+// User Input Elements
 const viewMenu = document.getElementById("view"); // view select menu
 const container = document.getElementById("menuContainer"); // bacteria menus get added here
 const addBacteria = document.getElementById("addBacteria"); // add bacteria button
@@ -27,6 +36,7 @@ const menu1 = document.getElementById("bacteria1"); // initial bacteria menu
 let bacteriaCount = 1; // bacteria menu counter
 let tempCount = 1; // temperature slider/input box counter
 
+// species data JSON
 const speciesLabels = {
     eColi: "Escherichia coli",
     mycobacteriumTuberculosis: "Mycobacterium tuberculosis",
@@ -35,6 +45,38 @@ const speciesLabels = {
     thermusAquaticus: "Thermus aquaticus"
 }
 
+/* Functions Defining Functionality of Collapsible Tabs */
+// opens the menu and changes the symbol appropriately
+function openCollapsible(symbol, menu) {
+    symbol.innerHTML = "-";
+    menu.style.display = "block";
+}
+
+// collapses/closes the menu and changes the symbol appropriately
+function closeCollapsible(symbol, menu) {
+    symbol.innerHTML = "+";
+    menu.style.display = "none";
+}
+
+infoTab.addEventListener("click", function(event) {
+    event.preventDefault();
+    if(infoMenu.style.display == "none") {
+        openCollapsible(infoSymbol, infoMenu);
+        return;
+    }
+    closeCollapsible(infoSymbol, infoMenu);
+})
+
+sheetTab.addEventListener("click", function(event) {
+    event.preventDefault();
+    if(sheetMenu.style.display == "none") {
+        openCollapsible(sheetSymbol, sheetMenu);
+        return;
+    }
+    closeCollapsible(sheetSymbol, sheetMenu);
+})
+
+/* Functions Defining Form Input and Functionality */
 // load past user input after running the simulation
 window.addEventListener("load", reloadData);
 function reloadData(){
