@@ -1,27 +1,21 @@
 /*
   Authors : Rena Ahn, Gina Philipose
   CSS File : style.css
-  Last Update : August 18th, 2024
+  Last Update : August 30th, 2024
 
   Purpose : Define the styling of the Growth Curve Simulation's main page
 */
 
-* { /* background */
+* {
     font-family: Calibri;
 }
 body {
     background-color: rgb(132, 163, 255);
     font-size: x-large;
-    margin: 5px;
+    margin: 0px;
 }
-.topbox{ /* title box */
-    display: flex;
+#topbox{ /* title box */
     background: rgb(59, 104, 255);
-    flex-direction: column;
-    margin-top: -8px;
-    margin-left: -8px;
-    margin-right: -8px;
-    margin-bottom: -8px;
 }
 h1{ /* title text */
     color: #ffffff;
@@ -90,16 +84,6 @@ input[type="text"]{
     font-size: 15px;
     cursor: pointer;
 }
-/*.sliders {
-    display:flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 200px;
-}
-.row {
-    display: flex;
-    flex-direction: row;
-}*/
 #sliderContainer {
     display: flex;
     flex-direction: column;
@@ -217,10 +201,18 @@ button:disabled {
     flex-wrap: nowrap;
     justify-content: space-around;
     gap: 10px;
+    & div p {
+        margin: 0px;
+    }
 }
 /* General Information Content */
 #moreInfo {
-    font-size: 17px;
+    margin-top: 10px;
+    font-size: 20px;
+}
+.highlight {
+    font-style: italic;
+    border-bottom: 1px dotted black;
 }
 #binaryFissionImg {
     width: 200px;
@@ -232,7 +224,6 @@ button:disabled {
 .toolTip1, .toolTip2, .toolTip3, .toolTip4 {
     position: relative;
     display: inline-block;
-    border-bottom: 1px dotted black;
 }
 .toolTip1 .text1 {
     display: flex;
@@ -245,7 +236,7 @@ button:disabled {
     padding: 5px;
     position: absolute;
     z-index: 1;
-    bottom: 150%;
+    top: 150%;
     left: 50%;
     margin-left: -40px; 
 }
@@ -254,12 +245,12 @@ button:disabled {
     display: flex;
     content: "";
     position: absolute;
-    top: 100%;
+    bottom: 100%;
     left: 10%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: black transparent transparent transparent;
+    border-color: transparent transparent black transparent;
 }
 .toolTip1:hover .text1, .toolTip2:hover .text2, .toolTip3:hover .text3, .toolTip4:hover .text4  {
     display: flex;
@@ -276,7 +267,7 @@ button:disabled {
     padding: 5px;
     position: absolute;
     z-index: 1;
-    bottom: 150%;
+    top: 150%;
     left: 120%;
     margin-left: -205px; 
 }
@@ -284,12 +275,12 @@ button:disabled {
     display: flex;
     content: "";
     position: absolute;
-    top: 100%;
+    bottom: 100%;
     left: 50%;
     margin-left: -5px;
     border-width: 5px;
     border-style: solid;
-    border-color: black transparent transparent transparent;
+    border-color: transparent transparent black transparent;
 }
 .toolTip3 .text3, .toolTip4 .text4 {
     display: flex;
@@ -302,7 +293,7 @@ button:disabled {
     padding: 5px;
     position: absolute;
     z-index: 1;
-    bottom: 150%;
+    top: 150%;
     left: 50%;
     margin-left: -205px; 
 }
@@ -344,8 +335,10 @@ button:disabled {
     justify-content: space-evenly;
 }
 #graphContainer {
-    width: 80%;
     display: none;
+}
+#graph {
+    width: 1200px;
 }
 
 table { /* table */
@@ -358,4 +351,22 @@ table, th, td {
 }
 th:not(:first-child) {
     font-style: italic;
+}
+
+/* Tab Menu Styling */
+.tabMenu {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.tab {
+    color: white;
+    background-color: rgb(59, 104, 255);
+    margin-bottom: 0px;
+    padding-left: 10px;
+    border: 1px solid rgb(59, 104, 255);
+}
+.menu {
+    margin-top: 0px;
+    padding: 10px;
+    border: 1px solid rgb(59, 104, 255);
 }
