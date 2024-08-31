@@ -4,7 +4,7 @@
 <!-- 
   Authors : Rena Ahn, Gina Philipose, Zachary Mullen
   HTML File : index.html
-  Last Update : August 28th, 2024
+  Last Update : August 30th, 2024
 
   Purpose : Define the main page of the Growth Curve Simulation
 -->
@@ -23,160 +23,179 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   </head>
 
+  <section id="topbox">
+    <h1>Growth Curve: Bacterial Growth and Temperature Simulation</h1>
+  </section>
+
   <body>
-    <div class="topbox">
-      <h1>Bacterial Growth and Temperature Simulation </h1>
-    </div>
-    <br>
-    <!--Purpose/Information Section-->
-    <div id="infobox">
-      <!--General Information-->
-      <div>
-        <p>The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.<br>
-          Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
-          psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
-          temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
-          through four phases:</p>
-
-        <!--Phase Information-->
-        <i>
-          <div id="moreInfo">
-            <!--Lag Phase-->
-            <div class="toolTip1">
-              lag phase,
-              <span class="text1">
-                When bacteria is introduced to a new medium, the bacterial population needs to adapt to the new environment; instead of immediately 
-                going through cell division, bacteria take time to create enzymes that are necessary for cell division and population growth in this
-                environment.
-              </span>
-            </div>
-            
-            <!--Exponential/Log Phase-->
-            <div class="toolTip2">
-              exponential/log phase,
-              <span class="text2">
-                In this phase, cells divide, causing the population to increase exponentially until the necessary resources run out.
-              </span>
-            </div>
-      
-            <!--Stationary Phase-->
-            <div class="toolTip3">
-              stationary phase,
-              <span class="text3">
-                In this phase, cell division rate is equal to cell death rate due to lack of nutrients of space,
-                causing the population size to stay constant.
-              </span>
-            </div>
-            
-            <!--Death/Prolonged Decline Phase-->
-            <div class="toolTip4">
-              death/prolonged decline phase,
-              <span class="text4">
-                In this phase, the number of live cells is exponentially decreasing.
-              </span>
-            </div> and
-          </div>
-        </i>
-      </div>
-      <img id="binaryFissionImg"
-            src="binaryFission.jpg"
-            alt="bacterial cell undergoing binary fission">
-      <!-- Source of Image: https://everyone.plos.org/wp-content/uploads/sites/5/legacy-featured-images/Staphylococcus_aureus_VISA_21-16x9.jpg -->
-    </div>
-
-    <form id="form1">
-      <div>
+    <div id="overviewContainer" class="tabMenu">
+      <h3 class="tab">
+        <span>+</span>
+        &ensp; Overview</h3>
+      <!--Purpose/Information Section-->
+      <div class="menu" style="display: none">
+      <div id="infobox">
+        <!--General Information-->
         <div>
-          <!--Select View-->
-          <div class="view">
-            <label for="view">Select View:
-            <select id="view">
-              <option value="linear">Linear</option>
-              <option value="log2">log_2</option>
-              <option value="log10">log_10</option>
-              <option value="table">Table</option>
-              <option value="cross-section">Cross-Section</option>
-            </select>
-            </label>
-          </div>
-          <br>
+          <p>The purpose of this simulation is to visually examine the effect of temperature on bacterial population growth.<br>
+            Bacteria can be put into four primary classifications depending on the temperature that they grow best in: 
+            psychrophiles, mesophiles, thermophiles, and hyperthermophiles. Input different temperatures to determine which 
+            temperatures these classifications grow most optimally at! When grown in a culture, bacterial populations cycle 
+            through four phases:</p>
 
-          <!--Radio Bubbles-->
-          <div class="radioContainer">
-            <label>Select Environment:
-              <br>
-              <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
-            </label>
-            <label>
-              <br>
-              <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
-            </label>
-          </div>
-        </div>
-
-        <div>
-          <div id="bacteriaInputBox">Select Species:
-            <!--Select Species Menus-->
-            <div id="menuContainer">
-              <select id="bacteria1">
-                <option value="eColi">Escherichia coli</option>
-                <option value="mycobacteriumTuberculosis">Mycobacterium tuberculosis</option>
-                <option value="clostridiumTetanus">Clostridium tetanus</option>
-                <option value="listeriaMonocytogenes">Listeria monocytogenes</option>
-                <option value="thermusAquaticus">Thermus acquaticus</option>
-              </select>
+          <!--Phase Information-->
+          
+            <div id="moreInfo">
+              <!--Lag Phase-->
+              <div class="toolTip1">
+                <span class="highlight">lag phase</span>
+                <span class="text1">
+                  When bacteria is introduced to a new medium, the bacterial population needs to adapt to the new environment; instead of immediately 
+                  going through cell division, bacteria take time to create enzymes that are necessary for cell division and population growth in this
+                  environment.
+                </span>
+              </div>,
+              
+              <!--Exponential/Log Phase-->
+              <div class="toolTip2">
+                <span class="highlight">exponential/log phase</span>
+                <span class="text2">
+                  In this phase, cells divide, causing the population to increase exponentially until the necessary resources run out.
+                </span>
+              </div>,
+        
+              <!--Stationary Phase-->
+              <div class="toolTip3">
+                <span class="highlight">stationary phase</span>
+                <span class="text3">
+                  In this phase, cell division rate is equal to cell death rate due to lack of nutrients of space,
+                  causing the population size to stay constant.
+                </span>
+              </div>, and 
+              
+              <!--Death/Prolonged Decline Phase-->
+              <div class="toolTip4">
+                <span class="highlight">death/prolonged decline phase</span>
+                <span class="text4">
+                  In this phase, the number of live cells is exponentially decreasing.
+                </span>
+              </div>
             </div>
           
-            <!--Add/Remove Bacteria Buttons-->
-            <div id="buttonsContainer">
-              <button id="addBacteria" type="button"> Add Species </button>
-              <div id="addBacteriaGuide">?
-                <span class="toolText"></span>
-              </div>
-              <br>
-              <button id="removeBacteria" type="button"> Remove Species</button>
-              <div id="removeBacteriaGuide">?
-                <span class="toolText"></span>
-              </div>
+        </div>
+        <img id="binaryFissionImg"
+              src="binaryFission.jpg"
+              alt="bacterial cell undergoing binary fission">
+        <!-- Source of Image: https://everyone.plos.org/wp-content/uploads/sites/5/legacy-featured-images/Staphylococcus_aureus_VISA_21-16x9.jpg -->
+      </div>
+      </div>
+    </div>
+    <div id="linksContainer" class="tabMenu">
+      <h3 class="tab">
+        <span>+</span>
+        &ensp; Worksheets</h3>
+      <div class="menu" style="display: none;">
+        <a href="" alt="Link to Download _____" download>Name of Paper</a>
+      </div>
+    </div>
+    
+    <div id="formContainer" class="tabMenu">
+      <h3 class="tab">Simulation Input</h3>
+      <form id="form1">
+        <div>
+          <div>
+            <!--Select View-->
+            <div class="view">
+              <label for="view">Select View:
+              <select id="view">
+                <option value="linear">Linear</option>
+                <option value="log2">log_2</option>
+                <option value="log10">log_10</option>
+                <option value="table">Table</option>
+                <!-- Cross Section is yet to be Implemented
+                <option value="cross-section">Cross-Section</option>
+                -->
+              </select>
+              </label>
+            </div>
+            <br>
+
+            <!--Radio Bubbles-->
+            <div class="radioContainer">
+              <label>Select Environment:
+                <br>
+                <input type="radio" id="bubble1" value="o" name="oxy">Aerobic
+              </label>
+              <label>
+                <br>
+                <input type="radio" id="bubble2" value="a" name="oxy">Anaerobic
+              </label>
             </div>
           </div>
 
-          <div id="tempInputBox">Select Temperature (Celsius):
-            <div>
-              <!--Sliders/Input Boxes-->
-              <div id="sliderContainer">
-                <div>
-                  <input type="range" value="50" min="0" max="100" id="slider1">
-                  <input type="text" id="sliderBox1" value="50">
+          <div>
+            <div id="bacteriaInputBox">Select Species:
+              <!--Select Species Menus-->
+              <div id="menuContainer">
+                <select id="bacteria1">
+                  <option value="eColi">Escherichia coli</option>
+                  <option value="mycobacteriumTuberculosis">Mycobacterium tuberculosis</option>
+                  <option value="clostridiumTetanus">Clostridium tetanus</option>
+                  <option value="listeriaMonocytogenes">Listeria monocytogenes</option>
+                  <option value="thermusAquaticus">Thermus acquaticus</option>
+                </select>
+              </div>
+            
+              <!--Add/Remove Bacteria Buttons-->
+              <div id="buttonsContainer">
+                <button id="addBacteria" type="button"> Add Species </button>
+                <div id="addBacteriaGuide">?
+                  <span class="toolText"></span>
+                </div>
+                <br>
+                <button id="removeBacteria" type="button"> Remove Species</button>
+                <div id="removeBacteriaGuide">?
+                  <span class="toolText"></span>
+                </div>
+              </div>
+            </div>
+
+            <div id="tempInputBox">Select Temperature (Celsius):
+              <div>
+                <!--Sliders/Input Boxes-->
+                <div id="sliderContainer">
+                  <div>
+                    <input type="range" value="50" min="0" max="100" id="slider1">
+                    <input type="text" id="sliderBox1" value="50">
+                  </div>
+                </div>
+
+                <!--Slider Color Key-->
+                <div id="colorBoxContainer">
+                  <div id="bodyBox"></div> Human Body
+                  <div id="feverBox"></div> Fever
                 </div>
               </div>
 
-              <!--Slider Color Key-->
-              <div id="colorBoxContainer">
-                <div id="bodyBox"></div> Human Body
-                <div id="feverBox"></div> Fever
-              </div>
-            </div>
-
-            <!--Add/Remove Temperature Buttons-->
-            <div id="tempContainer">
-              <button id="addTemp" type="button"> Add Temperature </button>
-              <div id="addTempGuide">?
-                <span class="toolText"></span>
-              </div>
-              <br>
-              <button id="removeTemp" type="button"> Remove Temperature</button>
-              <div id="removeTempGuide">?
-                <span class="toolText"></span>
+              <!--Add/Remove Temperature Buttons-->
+              <div id="tempContainer">
+                <button id="addTemp" type="button"> Add Temperature </button>
+                <div id="addTempGuide">?
+                  <span class="toolText"></span>
+                </div>
+                <br>
+                <button id="removeTemp" type="button"> Remove Temperature</button>
+                <div id="removeTempGuide">?
+                  <span class="toolText"></span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-
-      <!--Overall Submission Button-->
-      <button id="submitButton" type="submit" onclick="runSimulation()"> Run Simulation</button>
-    </form>
+        <!--Overall Submission Button-->
+        <button id="submitButton" type="submit" onclick="runSimulation()"> Run Simulation</button>
+      </form>
+    </div>
     <br>
 
       <!--Display Area/Box-->
