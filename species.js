@@ -1,6 +1,6 @@
 // Authors : Rena Ahn, Gina Philipose
 // JavaScript File : species.js
-// Last Update : August 28th, 2024
+// Last Update : August 30th, 2024
 
 /* Purpose : Define configuration JSON object (config),
              Define JSON object of bacteria species (species),
