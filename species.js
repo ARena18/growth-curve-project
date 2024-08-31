@@ -83,7 +83,7 @@ const species = {
     divSlowRate: 0.03,
     environment: "o",
     hourInterval: 2,
-    totalHours: 30
+    totalHours: 50
   },
   mycobacteriumTuberculosis: {
     maxTemp: 55,
@@ -93,7 +93,7 @@ const species = {
     divSlowRate: 0.03,
     environment: "o",
     hourInterval: 1000,
-    totalHours: 18000
+    totalHours: 30000
   },
   clostridiumTetanus: {
     maxTemp: 55,
@@ -102,8 +102,8 @@ const species = {
     maxDivTime: 60,
     divSlowRate: 0.03,
     environment: "a",
-    hourInterval: 6,
-    totalHours: 100
+    hourInterval: 5,
+    totalHours: 150
   },
   listeriaMonocytogenes: {
     maxTemp: 55,
@@ -112,8 +112,8 @@ const species = {
     maxDivTime: 60,
     divSlowRate: 0.03,
     environment: "o",
-    hourInterval: 8,
-    totalHours: 160
+    hourInterval: 10,
+    totalHours: 200
   },
   thermusAquaticus: {
     maxTemp: 99,
@@ -122,8 +122,8 @@ const species = {
     maxDivTime: 40,
     divSlowRate: 0.03,
     environment: "o",
-    hourInterval: 6,
-    totalHours: 100
+    hourInterval: 5,
+    totalHours: 150
   }
 }
 /* Additional Notes for Team
@@ -205,8 +205,7 @@ function reflectUI() {
   let num = 1;
   let bacteriaInput = document.getElementById(`bacteria${num}`);
   while(bacteriaInput) {   // updating config.speciesList
-    if(bacteriaInput.value != "NULL"
-       && config.speciesList.indexOf(bacteriaInput.value) < 0) {
+    if(config.speciesList.indexOf(bacteriaInput.value) < 0) {
       config.speciesList.push(bacteriaInput.value);
     }
 
@@ -414,6 +413,9 @@ function display() {
     document.getElementById("graphContainer").style.display = "block";
     drawGraph();
   }
+
+  let container = document.getElementById("displaySection");
+  container.scrollIntoView();
 }
 
 // Prepares/Organizes data necessary for tables
@@ -492,9 +494,98 @@ function formatGraphData() {
   let labelList = config.graphData[`@${config.tempList[0]}`].map(
     row => (row.interval * config.timeInterval) / 60
   );   // list of labels (x axis) used in graph
+
+  let calculation = linearNum;   // function to calculate data values
+  let yScale = {   // configuration for yScale of graph
+    display: true,
+    type: "linear",
+    title: {
+      display: true,
+      text: "Number of Cells"
+    }
+  };
+  // making appropriate changes when the graph is logarithmic
+  if(config.view == "log2") {
+    calculation = log2Num;
+    yScale.type = "logarithmic";
+  }
+  else if(config.view == "log10") {
+    calculation = log10Num;
+    yScale.type = "logarithmic";
+  }
+
+  // data <= one species, multiple temperatures
+  if(config.tempList.length > 1) {
+    let tempDatasets = [];
+    let c = 0;
+    for(const tempKey in config.graphData) {
+      tempDatasets.push({
+        label: tempKey.toString().slice(1) + "° Celsius",
+        data: config.graphData[tempKey].map(
+          row => calculation(row[config.speciesList[0]])
+        ),
+        borderColor: speciesGroup[c].color,
+        backgroundColor: speciesGroup[c].color,
+      });
+      c++;
+    }
+
+    return {
+      graphTitle: speciesGroup.filter( (species) =>
+        species.name == config.speciesList[0]
+      )[0].label + " Growth",
+      newYScale: yScale,
+      newData: {
+        labels: labelList,
+        datasets: tempDatasets
+      }
+    }
+  }
   
-  const delayBetweenPoints = totalDuration / labelList.length;
-  const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
+  // data <= multiple species, one temperature
+  let displaySpecies = speciesGroup.filter(
+    (species) => config.speciesList.indexOf(species.name) >= 0
+  );
+  let speciesDatasets = displaySpecies.map(function(group) {
+    return {
+      label: group.label,
+      data: config.graphData[`@${config.tempList[0]}`].map(
+        row => calculation(row[group.name])
+      ),
+      borderColor: group.color,
+      backgroundColor: group.color,
+    }
+  })
+  
+  return {
+    graphTitle: "Bacteria Growth at " + config.tempList[0] + "°C",
+    newYScale: yScale,
+    newData: {
+      labels: labelList,
+      datasets: speciesDatasets
+    }
+  }
+}
+
+// Creates/Updates the line graph
+// Utilizes Function(s)...formatGraphData
+// Pre : config.view is equal to "linear", "log2", or "log10"
+// Post : none
+function drawGraph() {
+  let {graphTitle, newYScale, newData} = formatGraphData();
+
+  let lineChart = Chart.getChart('graph');
+  if(lineChart) {   // Updating graph
+    lineChart.data = newData;
+    lineChart.options.scales.y = newYScale;
+    lineChart.options.plugins.title.text = graphTitle;
+    lineChart.update();
+    return;
+  }
+
+  const delayBetweenPoints = totalDuration / newData.labels.length;
+  const previousY = (ctx) => ctx.index === 0 ? ctx.chart.scales.y.getPixelForValue(100) : 
+    ctx.chart.getDatasetMeta(ctx.datasetIndex).data[ctx.index - 1].getProps(['y'], true).y;
   const animation = {
     x: {
       type: 'number',
@@ -524,96 +615,6 @@ function formatGraphData() {
     }
   };   // animation JSON for automatic progression of graph
 
-  let calculation = linearNum;   // function to calculate data values
-  let yScale = {   // configuration for yScale of graph
-    display: true,
-    type: "linear",
-    title: {
-      display: true,
-      text: "Number of Cells"
-    }
-  };
-  // making appropriate changes when the graph is logarithmic
-  if(config.view == "log2") {
-    calculation = log2Num;
-    yScale.type = "logarithmic";
-  }
-  else if(config.view == "log10") {
-    calculation = log10Num;
-    yScale.type = "logarithmic";
-  }
-  
-
-  // data <= one species, multiple temperatures
-  if(config.tempList.length > 1) {
-    let tempDatasets = [];
-    let c = 0;
-    for(const tempKey in config.graphData) {
-      tempDatasets.push({
-        label: tempKey.toString().slice(1) + "° Celsius",
-        data: config.graphData[tempKey].map(
-          row => calculation(row[config.speciesList[0]])
-        ),
-        borderColor: speciesGroup[c].color,
-        backgroundColor: speciesGroup[c].color
-      });
-      c++;
-    }
-
-    return {
-      graphTitle: speciesGroup.filter( (species) =>
-        species.name == config.speciesList[0]
-      )[0].label + " Growth",
-      animation: animation,
-      newYScale: yScale,
-      newData: {
-        labels: labelList,
-        datasets: tempDatasets
-      }
-    }
-  }
-  
-  // data <= multiple species, one temperature
-  let displaySpecies = speciesGroup.filter(
-    (species) => config.speciesList.indexOf(species.name) >= 0
-  );
-  let speciesDatasets = displaySpecies.map(function(group) {
-    return {
-      label: group.label,
-      data: config.graphData[`@${config.tempList[0]}`].map(
-        row => calculation(row[group.name])
-      ),
-      borderColor: group.color,
-      backgroundColor: group.color
-    }
-  })
-  
-  return {
-    graphTitle: "Bacteria Growth at " + config.tempList[0] + "°C",
-    animation: animation,
-    newYScale: yScale,
-    newData: {
-      labels: labelList,
-      datasets: speciesDatasets
-    }
-  }
-}
-
-// Creates/Updates the line graph
-// Utilizes Function(s)...formatGraphData
-// Pre : config.view is equal to "linear", "log2", or "log10"
-// Post : none
-function drawGraph() {
-  let {graphTitle, animation, newYScale, newData} = formatGraphData();
-
-  let lineChart = Chart.getChart('graph');
-  if(lineChart) {   // Updating graph
-    lineChart.data = newData;
-    lineChart.options.scales.y = newYScale;
-    lineChart.update();
-    return;
-  }
-
   new Chart(   // Creating graph
     document.getElementById('graph'),
     {
@@ -621,7 +622,6 @@ function drawGraph() {
       data: newData,
       options: {
         animation,
-        responsive: true,
         tension: 0.3,
         plugins: {
           title: {
